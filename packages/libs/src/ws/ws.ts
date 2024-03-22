@@ -1,5 +1,6 @@
 import consola from 'consola'
-import { WebSocket } from 'ws'
+import WebSocketNode from 'ws'
+
 
 import { sign, verify } from '@/jose/sign'
 
@@ -17,6 +18,16 @@ declare module 'ws' {
     jose?: IJoseData
   }
 }
+
+declare global {
+  export interface WebSocket {
+    jose?: IJoseData
+  }
+}
+
+
+
+
 type BufferLike =
   | string
   | Buffer
@@ -35,7 +46,9 @@ type BufferLike =
   | { valueOf: () => string }
   | { [Symbol.toPrimitive]: (hint: string) => string }
 
-export class WebSocketProxy extends WebSocket {
+
+
+export class WebSocketProxy extends WebSocketNode.WebSocket {
   public constructor(
     address: string | URL,
     protocols?: string | string[],
@@ -43,11 +56,12 @@ export class WebSocketProxy extends WebSocket {
     jose?: IJoseData
   ) {
     super(address, protocols, options)
-    return wrapSocket(this, jose)
+    return wrapSocket(this, jose) as WebSocketNode.WebSocket
   }
 }
 
-export function wrapSocket(ws: WebSocket, jose?: IJoseData ) {
+
+export function wrapSocket(ws: WebSocketNode.WebSocket | WebSocket, jose?: IJoseData ) {
   ws['jose'] = jose
   return new Proxy(ws, {
     get: (target, prop, receiver) => {
@@ -64,7 +78,7 @@ export function wrapSocket(ws: WebSocket, jose?: IJoseData ) {
 }
 
 async function customOn(
-  this: WebSocket,
+  this: WebSocketNode.WebSocket | WebSocket,
   event: string,
   listener: (...args: any[]) => void,
 ) {
@@ -91,7 +105,7 @@ async function customOn(
 }
 
 async function customSend(
-  this: WebSocket,
+  this: WebSocketNode.WebSocket | WebSocket,
   data: BufferLike,
   cb?: (error?: Error) => void,
 ) {
