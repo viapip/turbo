@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@sozdev/backend",
+  "type": "module",
+  "version": "0.0.9",
+  "packageManager": "yarn@4.1.1",
+  "description": "Rollup build script",
+  "author": "Alexander Semyenov <semyenov@hotmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/semyenov/typescript-template#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/semyenov/typescript-template.git"
+  },
+  "bugs": "https://github.com/semyenov/rollup-build/issues",
+  "keywords": [],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.cjs"
+    }
+  },
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.mjs",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "cross-env NODE_OPTIONS=\"--no-warnings\" yarn rollup --configPlugin esbuild --config rollup.config.ts",
+    "start": "cross-env NODE_OPTIONS=\"--no-warnings --experimental-modules --experimental-import-meta-resolve\" yarn node dist/esm/index.mjs",
+    "schema": "yarn typescript-json-schema --out schema.json --skipLibCheck src/index.ts Options",
+    "typecheck": "yarn tsc --noEmit",
+    "release": "yarn npm publish",
+    "clean": "yarn exec rm -rf dist",
+    "lint": "yarn eslint --config eslint.config.js",
+    "server": "yarn tsx --watch src/server",
+    "dev": "yarn tsx --watch src/server",
+    "client": "yarn tsx --watch src/client",
+    "workers": "yarn tsx --watch src/workers",
+    "generate:types": "yarn tsx scripts/generate_types.ts",
+    "generate:keys": "yarn tsx scripts/generate_keys.ts",
+    "upload:schemas": "yarn tsx scripts/upload_schemas.ts"
+  },
+  "dependencies": {
+    "@antfu/utils": "^0.7.7",
+    "@apidevtools/json-schema-ref-parser": "^11.5.4",
+    "@exodus/schemasafe": "^1.3.0",
+    "@msgpack/msgpack": "^3.0.0-beta2",
+    "@sozdev/share-libs": "*",
+    "@trpc/client": "^10.45.2",
+    "@trpc/server": "^10.45.2",
+    "ajv": "^8.12.0",
+    "ajv-errors": "^3.0.0",
+    "ajv-formats": "^2.1.1",
+    "ajv-i18n": "^4.2.0",
+    "ajv-keywords": "^5.1.0",
+    "bullmq": "^5.4.2",
+    "c12": "^1.10.0",
+    "consola": "^3.2.3",
+    "cross-env": "7.0.3",
+    "defu": "^6.1.4",
+    "dotenv": "^16.4.5",
+    "fast-glob": "^3.3.2",
+    "h3": "^1.11.1",
+    "jose": "^5.2.3",
+    "listhen": "^1.7.2",
+    "mongodb": "^6.5.0",
+    "nanoid": "^5.0.6",
+    "radash": "^12.1.0",
+    "redis": "^4.6.13",
+    "superjson": "^2.2.1",
+    "ts-pattern": "^5.0.8",
+    "tsx": "^4.7.1",
+    "ws": "^8.16.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@sozdev/eslint-config": "^0.0.17",
+    "@types/ws": "^8.5.10",
+    "eslint": "^8.57.0",
+    "json-schema-migrate": "^2.0.0",
+    "lint-staged": "^15.2.2",
+    "quicktype-core": "^23.0.106",
+    "rollup": "^4.13.0",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-esbuild": "^6.1.1",
+    "simple-git-hooks": "^2.10.0",
+    "typescript": "^5.4.2",
+    "typescript-json-schema": "0.63.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "yarn lint-staged"
+  },
+  "lint-staged": {
+    "./{src,lib,scripts}/**/*.{ts,js,yaml,yml,json,md,mdc,vue}": "yarn lint --fix --"
+  }
+}

@@ -1,0 +1,48 @@
+plugins:
+  - stylelint-order
+extends:
+  - stylelint-config-recommended
+  - stylelint-config-recommended-vue
+  - stylelint-config-standard
+  - stylelint-config-tailwindcss
+  - stylelint-config-rational-order
+rules:
+  rule-empty-line-before: null
+  selector-class-pattern: null
+  declaration-block-trailing-semicolon: null
+  no-descending-specificity: null
+  selector-max-compound-selectors: 5
+  max-nesting-depth: 8
+  order/properties-alphabetical-order: null
+  color-named: null
+  selector-no-qualifying-type: null
+  no-empty-source: null
+  selector-max-id: 1
+  order/order:
+    - dollar-variables
+    - at-rules
+    - rules
+    - custom-properties
+    - declarations
+  at-rule-empty-line-before:
+    - always
+    - except:
+        - blockless-after-blockless
+        - blockless-after-same-name-blockless
+        - first-nested
+      ignore:
+        - after-comment
+        - inside-block
+      ignoreAtRules:
+        - apply
+        - screen
+        - font-face
+        - nest
+  at-rule-no-unknown:
+    - true
+    - ignoreAtRules:
+        - tailwind
+        - apply
+        - variants
+        - responsive
+        - screen

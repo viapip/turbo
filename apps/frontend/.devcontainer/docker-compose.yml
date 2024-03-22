@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  app:
+    build:
+      dockerfile: dockerfile
+    network_mode: host
+    volumes:
+      - ..:/workspace:cached
+      - /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket
+    command: [
+      "/bin/sh", "-c",
+      "while sleep 1000; do :; done"
+    ]
