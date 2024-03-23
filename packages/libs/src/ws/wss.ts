@@ -15,10 +15,12 @@ const logger = consola.withTag('wss')
 // }
 
 export class WebSocketServerProxy extends WebSocketServer {
+  jose?: IJoseData
   public constructor(options?: ServerOptions, jose?: IJoseData, callback?: () => void) {
     super(options, callback)
+    this.jose = jose
     logger.info('new WebSocketServer', jose)
-    // return wrapSocketServer(this)
+    return wrapSocketServer(this)
   }
 }
 

@@ -2,13 +2,16 @@ import { IJoseData } from "@/jose/types"
 import { wrapSocket } from "./ws"
 
 
-export class WebSocketProxy extends WebSocket {
+export class WebSocketBrowserProxy extends WebSocket {
+  jose?: IJoseData;
   public constructor(
     address: string | URL,
     protocols?: string | string[],
     jose?: IJoseData
   ) {
     super(address, protocols)
-    return wrapSocket(this, jose) as WebSocket
+    this.jose = jose
+
+    return wrapSocket(this)
   }
 }

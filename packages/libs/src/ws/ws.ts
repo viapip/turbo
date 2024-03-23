@@ -1,12 +1,12 @@
 import consola from 'consola'
 import WebSocketNode from 'ws'
 
-
 import { sign, verify } from '@/jose/sign'
 
 import type { Buffer } from 'node:buffer'
 import type { ClientOptions } from 'ws'
 import { IJoseData } from '@/jose/types'
+import { WebSocketBrowserProxy } from './browser'
 
 const logger = consola.withTag('ws')
 
@@ -24,9 +24,6 @@ declare global {
     jose?: IJoseData
   }
 }
-
-
-
 
 type BufferLike =
   | string
@@ -46,27 +43,31 @@ type BufferLike =
   | { valueOf: () => string }
   | { [Symbol.toPrimitive]: (hint: string) => string }
 
-
-
 export class WebSocketProxy extends WebSocketNode.WebSocket {
+  jose?: IJoseData
   public constructor(
     address: string | URL,
     protocols?: string | string[],
     options?: ClientOptions,
-    jose?: IJoseData
+    jose?: IJoseData,
   ) {
     super(address, protocols, options)
-    return wrapSocket(this, jose) as WebSocketNode.WebSocket
+    this.jose = jose
+    return wrapSocket(this)
   }
 }
 
-
-export function wrapSocket(ws: WebSocketNode.WebSocket | WebSocket, jose?: IJoseData ) {
-  ws['jose'] = jose
+export function wrapSocket<T>(
+  ws: WebSocketProxy | WebSocketBrowserProxy,
+  jose?: IJoseData,
+) {
+  ws.jose = jose
   return new Proxy(ws, {
     get: (target, prop, receiver) => {
       switch (prop) {
         case 'on':
+          return customOn.bind(target)
+        case 'addEventListener':
           return customOn.bind(target)
         case 'send':
           return customSend.bind(target)
@@ -74,21 +75,31 @@ export function wrapSocket(ws: WebSocketNode.WebSocket | WebSocket, jose?: IJose
 
       return Reflect.get(target, prop, receiver)
     },
-  })
+  }) as T
 }
 
 async function customOn(
-  this: WebSocketNode.WebSocket | WebSocket,
+  this: WebSocketProxy | WebSocketBrowserProxy,
   event: string,
-  listener: (...args: any[]) => void,
+  listener: (...args: any[]) => void
 ) {
-  this.on(event, async (...args: any[]) => {
+  const isBrowser = this instanceof WebSocketBrowserProxy
+
+  if (!isBrowser) {
+    this.on(event, customListener)
+    return 
+  }
+
+  this.addEventListener(event, customListener)
+
+
+  async function customListener (this: WebSocketProxy | WebSocketBrowserProxy, ...args: any[]) {
     if (event === 'message') {
       const [data, isBinary] = args as [BufferLike, boolean]
 
-      console.log('customOn', data);
+      console.log('customOn', data)
 
-      if(!this.jose) {
+      if (!this.jose) {
         return listener.call(this, data, isBinary)
       }
 
@@ -101,22 +112,24 @@ async function customOn(
     }
 
     listener.call(this, ...args)
-  })
+  }
 }
 
 async function customSend(
-  this: WebSocketNode.WebSocket | WebSocket,
+  this: WebSocketProxy | WebSocketBrowserProxy,
   data: BufferLike,
   cb?: (error?: Error) => void,
 ) {
-  console.log('customSend', data);
+  console.log('customSend', data)
+  const isBrowser = this instanceof WebSocketBrowserProxy
 
-  if(!this.jose) {
-    return this.send(data, cb)
+  if (!this.jose) {
+    return isBrowser ? this.send(data as string) : this.send(data, cb)
   }
 
   const jws = await sign(this.jose.key, JSON.parse(data.toString()))
+  
   logger.log('Sending', jws)
-
-  this.send(jws, cb)
+  
+  isBrowser? this.send(jws) : this.send(jws, cb)
 }

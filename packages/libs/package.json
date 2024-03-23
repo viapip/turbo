@@ -88,7 +88,7 @@
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@sozdev/eslint-config": "^0.0.17",
+    "@sozdev/eslint-config": "^0.0.11",
     "@sozdev/rollup-build": "^0.0.10",
     "@types/ws": "^8.5.10",
     "eslint": "^8.57.0",
