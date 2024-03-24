@@ -40,6 +40,7 @@
     "types/**/*",
     "src/**/*",
     "lib/**/*",
-    "scripts/**/*"
-  ]
+    "scripts/**/*",
+    "client"
+, "client"  ]
 }

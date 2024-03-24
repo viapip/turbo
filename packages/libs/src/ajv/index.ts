@@ -11,42 +11,44 @@ import { readFile } from 'node:fs/promises'
 import { basename } from 'node:path'
 // import { redis } from '@/redis'
 
-import type { AnySchemaObject } from 'ajv'
+import type { AnySchemaObject, Options } from 'ajv'
+import defu from 'defu'
 
 const logger = consola.withTag('ajv')
+const defaultOptions: Options = {
+  logger,
+  schemaId: '$id',
+  meta: true,
+  strict: 'log',
+  strictTypes: 'log',
+  allErrors: true,
+  messages: false,
+  verbose: true,
+  coerceTypes: true,
+  addUsedSchema: true,
+  validateFormats: true,
+  inlineRefs: true,
+  passContext: true,
+  timestamp: 'date',
+  $data: true,
+  // loadSchema: async (uri: string) => {
+  //   const transformedUri = uri.replace('/', ':')
+  //   logger.info('Requesting schema', uri, '->', transformedUri)
+  //   const schema = await redis.schemas.findOne(transformedUri) as AnySchemaObject | undefined
 
-export async function createAjv() {
-  const ajv = new Ajv({
-    logger,
-    schemaId: '$id',
-    meta: true,
-    strict: 'log',
-    strictTypes: 'log',
-    allErrors: true,
-    messages: false,
-    verbose: true,
-    coerceTypes: true,
-    addUsedSchema: true,
-    validateFormats: true,
-    inlineRefs: true,
-    passContext: true,
-    timestamp: 'date',
-    $data: true,
-    // loadSchema: async (uri: string) => {
-    //   const transformedUri = uri.replace('/', ':')
-    //   logger.info('Requesting schema', uri, '->', transformedUri)
-    //   const schema = await redis.schemas.findOne(transformedUri) as AnySchemaObject | undefined
+  //   if (!schema) {
+  //     throw new TRPCError({
+  //       code: 'BAD_REQUEST',
+  //       message: `Schema not found: ${uri}`,
+  //     })
+  //   }
 
-    //   if (!schema) {
-    //     throw new TRPCError({
-    //       code: 'BAD_REQUEST',
-    //       message: `Schema not found: ${uri}`,
-    //     })
-    //   }
-
-    //   return schema
-    // },
-  })
+  //   return schema
+  // },
+}
+export async function createAjv(options: Options ) {
+  
+  const ajv = new Ajv(defu(defaultOptions, options))
 
   ajvKeywords(ajv)
   ajvFormats(ajv)

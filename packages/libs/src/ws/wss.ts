@@ -20,7 +20,7 @@ export class WebSocketServerProxy extends WebSocketServer {
     super(options, callback)
     this.jose = jose
     logger.info('new WebSocketServer', jose)
-    return wrapSocketServer(this)
+    // return wrapSocketServer(this)
   }
 }
 

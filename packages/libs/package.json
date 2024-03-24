@@ -46,6 +46,7 @@
     "lint": "yarn eslint --config eslint.config.js",
     "server": "yarn tsx --watch src/server",
     "dev": "yarn tsx --watch src/",
+    "dev1": "yarn tsx --watch src/",
     "client": "yarn tsx --watch src/client",
     "workers": "yarn tsx --watch src/workers",
     "generate:types": "yarn tsx scripts/generate_types.ts",

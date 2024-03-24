@@ -1,7 +1,6 @@
-import { type CreateTRPCProxyClient, createTRPCProxyClient, createWSClient, httpBatchLink, wsLink } from '@trpc/client'
+import { WebSocketBrowserProxy, transformer } from '@sozdev/share-libs'
+import { type CreateTRPCProxyClient, createTRPCProxyClient, createWSClient, wsLink } from '@trpc/client'
 import consola from 'consola'
-import json from 'superjson'
-import { WebSocketProxy } from '~/utils/ws/index'
 
 import type { AppRouter } from '@sozdev/backend'
 
@@ -15,7 +14,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   const nuxtApp = useNuxtApp()
   const wsClient = createWSClient({
     url: 'ws://localhost:8080',
-    WebSocket: WebSocket,
+    WebSocket: WebSocketBrowserProxy as typeof WebSocket,
 
     onOpen() {
       consola.info('Connected')
@@ -31,7 +30,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
         client: wsClient,
       }),
     ],
-    transformer: json,
+    transformer,
   })
   nuxtApp.provide('trpc', client)
 })

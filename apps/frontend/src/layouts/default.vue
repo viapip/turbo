@@ -8,7 +8,7 @@ const { setLocale, locale } = useI18n()
       <div class="fixed top-0 bottom-0 left-0 right-0 overflow-visible pointer-events-none winbox-layer">
         <div id="teleport-layer--10" class="relative z-10 pointer-events-auto" />
         <div id="teleport-layer--20" class="relative z-20 pointer-events-auto" />
-        <WinboxRoot />
+        <!-- <WinboxRoot /> -->
       </div>
       <div class="flex flex-row items-stretch flex-grow page-header">
         <div class="z-30 flex flex-col justify-between border-r shadow-lg border-primary-700/80 bg-primary-800">

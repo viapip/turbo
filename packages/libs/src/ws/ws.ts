@@ -1,12 +1,12 @@
 import consola from 'consola'
-import WebSocketNode from 'ws'
+import {WebSocket as WebSocketNode} from 'ws'
 
 import { sign, verify } from '@/jose/sign'
 
 import type { Buffer } from 'node:buffer'
 import type { ClientOptions } from 'ws'
 import { IJoseData } from '@/jose/types'
-import { WebSocketBrowserProxy } from './browser'
+import  { WebSocketBrowserProxy } from './browser'
 
 const logger = consola.withTag('ws')
 
@@ -43,8 +43,8 @@ type BufferLike =
   | { valueOf: () => string }
   | { [Symbol.toPrimitive]: (hint: string) => string }
 
-export class WebSocketProxy extends WebSocketNode.WebSocket {
-  jose?: IJoseData
+export class WebSocketProxy extends WebSocketNode {
+  public jose?: IJoseData
   public constructor(
     address: string | URL,
     protocols?: string | string[],
@@ -53,7 +53,7 @@ export class WebSocketProxy extends WebSocketNode.WebSocket {
   ) {
     super(address, protocols, options)
     this.jose = jose
-    return wrapSocket(this)
+    // return wrapSocket(this)
   }
 }
 
@@ -90,7 +90,7 @@ async function customOn(
     return 
   }
 
-  this.addEventListener(event, customListener)
+  (this as WebSocket).addEventListener(event, customListener)
 
 
   async function customListener (this: WebSocketProxy | WebSocketBrowserProxy, ...args: any[]) {
@@ -102,7 +102,8 @@ async function customOn(
       if (!this.jose) {
         return listener.call(this, data, isBinary)
       }
-
+      console.log('customOn', 'jose', this.jose);
+      
       const jws = await verify(data.toString(), this.jose.jwks)
       logger.log('Receiving', event, JSON.stringify(jws))
 
@@ -124,12 +125,12 @@ async function customSend(
   const isBrowser = this instanceof WebSocketBrowserProxy
 
   if (!this.jose) {
-    return isBrowser ? this.send(data as string) : this.send(data, cb)
+    return isBrowser ? (this as WebSocket).send(data as string) : this.send(data, cb)
   }
 
   const jws = await sign(this.jose.key, JSON.parse(data.toString()))
   
   logger.log('Sending', jws)
   
-  isBrowser? this.send(jws) : this.send(jws, cb)
+  isBrowser? (this as WebSocket).send(jws) : this.send(jws, cb)
 }

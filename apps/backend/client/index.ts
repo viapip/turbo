@@ -1,5 +1,7 @@
 import process from 'node:process'
 
+import { readFile } from 'node:fs/promises'
+
 import {
   createTRPCProxyClient,
   createWSClient,
@@ -7,15 +9,17 @@ import {
 } from '@trpc/client'
 import consola from 'consola'
 
-import { transformer } from '@sozdev/share-libs'
+import { IJoseData, KeyPair, transformer } from '@sozdev/share-libs'
 import { WebSocketProxy } from '@sozdev/share-libs'
 
 import type { AppRouter } from '~/server/router'
+import { createLocalJWKSet } from 'jose'
+import { jwks, keys1 } from '@/jose/keys'
 
 const logger = consola.withTag('client')
 
 const wsClient = createWSClient({
-  url: 'ws://localhost:4000',
+  url: 'ws://localhost:8080',
   WebSocket: WebSocketProxy as any,
 
   onOpen() {
@@ -25,6 +29,14 @@ const wsClient = createWSClient({
     logger.info('Disconnected')
   },
 })
+
+const ws = wsClient.getConnection()
+
+// ws.jose = await getJoseData()
+ws.jose = {
+  jwks: jwks,
+  key: keys1
+}
 
 const client = createTRPCProxyClient<AppRouter>({
   links: [wsLink({ client: wsClient })],
@@ -71,7 +83,7 @@ while (true) {
 
   const { _id } = await client.data.postItem.mutate({
     id: `${Math.floor(Math.random() * 1000)}`,
-    schemaId: 'user',
+    schemaId: 'User',
     data: {
       status: 'active',
       date: new Date(),
@@ -90,3 +102,30 @@ while (true) {
 }
 
 process.exit(0)
+async function getJoseData(): Promise<IJoseData> {
+  
+  const keys1: KeyPair = JSON.parse(await readFile(
+   'keys/key1.jwk',
+   'utf8',
+ ))
+  const keys2: KeyPair = JSON.parse(await readFile(
+   'keys/key2.jwk',
+   'utf8',
+ ))
+ 
+ //  const keys1Private = await importJWK(keys1.privateKey)
+ //  const keys2Private = await importJWK(keys2.privateKey)
+ 
+  const jwks = createLocalJWKSet({
+    keys: [
+      keys1.publicKey,
+      keys2.publicKey,
+    ],
+  })
+ 
+ return {
+   jwks,
+   key: keys1,
+ }
+ 
+ }

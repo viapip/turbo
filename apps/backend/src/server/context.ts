@@ -8,13 +8,13 @@ export type CreateContextOptions =
   | CreateHTTPContextOptions
   | CreateWSSContextFnOptions
 
-const ajv = await createAjv()
-const mongodb = await createMongoDBStore()
-const redis = await createRedisStore()
 
 export async function createContext(
   _opts: CreateContextOptions,
 ) {
+  const ajv = await createAjv()
+  const mongodb = await createMongoDBStore()
+  const redis = await createRedisStore()
   return {
     ajv,
     redis,

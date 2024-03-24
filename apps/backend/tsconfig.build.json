@@ -1,6 +1,10 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "sourceMap": true
+    "sourceMap": true,
+    "declarationDir": "./src/types/",
+    "declaration": true,
+    "typeRoots": ["./src/types"],
+    "allowImportingTsExtensions": true
   }
 }

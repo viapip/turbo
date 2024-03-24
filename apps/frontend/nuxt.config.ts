@@ -1,6 +1,6 @@
 import consola from 'consola'
 import { resolve } from 'pathe'
-import colors from 'tailwindcss/colors'
+import * as colors from 'tailwindcss/colors'
 
 import { defaultLocale, locales } from './src/i18n'
 
@@ -136,7 +136,7 @@ export default defineNuxtConfig({
     shim: false,
     typeCheck: true,
     tsConfig: {
-      exclude: ['packages'],
+      exclude: ['packages', 'node_modules'],
       compilerOptions: {
         // declaration: true,
 
@@ -162,20 +162,20 @@ export default defineNuxtConfig({
     // timing: true,
   },
 
-  utils: {
-    imports: [
-      {
-        from: '@antfu/utils',
-        prefixSkip: 'is',
-        prefix: 'fu',
-      },
-      {
-        from: 'radash',
-        prefixSkip: 'is',
-        prefix: 'ra',
-      },
-    ],
-  },
+  // utils: {
+  //   imports: [
+  //     {
+  //       from: '@antfu/utils',
+  //       prefixSkip: 'is',
+  //       prefix: 'fu',
+  //     },
+  //     {
+  //       from: 'radash',
+  //       prefixSkip: 'is',
+  //       prefix: 'ra',
+  //     },
+  //   ],
+  // },
 
   i18n: {
     locales,
@@ -217,7 +217,5 @@ export default defineNuxtConfig({
     '@nuxtjs/robots',
     'nuxt-typed-router',
 
-    '@sozdev/nuxt-utils',
-    '@sozdev/nuxt-winbox',
   ],
 })
