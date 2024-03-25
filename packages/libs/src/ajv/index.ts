@@ -5,11 +5,10 @@ import ajvFormats from 'ajv-formats'
 import ajvI18n from 'ajv-i18n'
 import ajvKeywords from 'ajv-keywords'
 import consola from 'consola'
-import glob from 'fast-glob'
+// import glob from 'fast-glob'
 import {userSchema } from './schema'
 import { readFile } from 'node:fs/promises'
 import { basename } from 'node:path'
-// import { redis } from '@/redis'
 
 import type { AnySchemaObject, Options } from 'ajv'
 import defu from 'defu'
@@ -55,22 +54,22 @@ export async function createAjv(options: Options ) {
   ajvErrors(ajv)
   // const schemas = await redis.schemas.getAll()
 
-  const files = await glob('*.json', {
-    cwd: 'defs',
-    absolute: true,
-  })
+  // const files = await glob('*.json', {
+  //   cwd: 'defs',
+  //   absolute: true,
+  // })
 
-  const schemas = await Promise.all(files.map(async (file) => {
-    console.log('Loading schema', file)
-    const fileContent = await readFile(file, 'utf8')
-    const schemaId = basename(file, '.json')
-    const schema = JSON.parse(fileContent) as AnySchemaObject
+  // const schemas = await Promise.all(files.map(async (file) => {
+  //   console.log('Loading schema', file)
+  //   const fileContent = await readFile(file, 'utf8')
+  //   const schemaId = basename(file, '.json')
+  //   const schema = JSON.parse(fileContent) as AnySchemaObject
 
-    return { ...schema, $id: schemaId }
-  }))
+  //   return { ...schema, $id: schemaId }
+  // }))
 
   // logger.info('Loaded schemas', schemas.length)
-  ajv.addSchema(schemas)
+  // ajv.addSchema(schemas)
   ajv.addSchema(userSchema, 'User')
   // ajv.compileAsync(userSchema)
   function validateSchema(schemaId: string, data: unknown) {

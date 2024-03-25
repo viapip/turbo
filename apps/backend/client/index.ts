@@ -32,11 +32,11 @@ const wsClient = createWSClient({
 
 const ws = wsClient.getConnection()
 
-ws.jose = await getJoseData()
-// ws.jose = {
-//   jwks: jwks,
-//   key: keys1
-// }
+// ws.jose = await getJoseVerify()
+ws.jose = {
+  jwks: jwks,
+  key: keys1
+}
 
 const client = createTRPCProxyClient<AppRouter>({
   links: [wsLink({ client: wsClient })],
@@ -102,7 +102,7 @@ while (true) {
 }
 
 process.exit(0)
-async function getJoseData(): Promise<IJoseVerify> {
+async function getJoseVerify(): Promise<IJoseVerify> {
   
   const keys1: KeyPair = JSON.parse(await readFile(
    'keys/key1.jwk',

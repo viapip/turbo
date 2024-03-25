@@ -7,7 +7,7 @@
       "DOM"
     ],
     "baseUrl": ".",
-    "rootDir": ".",
+    "rootDir": "./src/",
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noResolve": false,
@@ -27,7 +27,7 @@
     "resolvePackageJsonImports": true,
     "allowJs": true,
     "strict": true,
-    "declaration": false,
+    "declaration": true,
     "importHelpers": true,
     "outDir": "dist",
     "sourceMap": true,

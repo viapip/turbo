@@ -10,9 +10,6 @@ import type {
   Options,
   TargetLanguage,
 } from 'quicktype-core'
-interface ITargetLang extends TargetLanguage {
-  
-}
 export async function quicktypeMultipleJSONSchema(
   lang: string | TargetLanguage,
   data: JSONSchemaSourceData[],

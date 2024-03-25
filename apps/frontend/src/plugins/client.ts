@@ -1,4 +1,4 @@
-import { WebSocketBrowserProxy, transformer } from '@sozdev/share-libs'
+import { transformer } from '@sozdev/share-libs/dist/browser'
 import { type CreateTRPCProxyClient, createTRPCProxyClient, createWSClient, wsLink } from '@trpc/client'
 import consola from 'consola'
 
@@ -14,7 +14,8 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   const nuxtApp = useNuxtApp()
   const wsClient = createWSClient({
     url: 'ws://localhost:8080',
-    WebSocket: WebSocketBrowserProxy as any,
+    // WebSocket: WebSocketBrowserProxy as any,
+    WebSocket,
 
     onOpen() {
       consola.info('Connected')

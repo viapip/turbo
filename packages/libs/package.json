@@ -14,30 +14,15 @@
   },
   "bugs": "https://github.com/semyenov/rollup-build/issues",
   "keywords": [],
-  "sideEffects": false,
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/esm/index.mjs",
-      "require": "./dist/cjs/index.cjs"
-    }
-  },
-  "main": "./dist/cjs/index.cjs",
-  "module": "./dist/esm/index.mjs",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/*",
-        "./dist/index.d.ts"
-      ]
-    }
-  },
+  "sideEffects": false,
   "files": [
-    "dist"
+    "dist/"
   ],
   "scripts": {
-    "build": "cross-env NODE_OPTIONS=\"--no-warnings\" yarn rollup --configPlugin esbuild --config rollup.config.ts",
+    "build:rollup": "cross-env NODE_OPTIONS=\"--no-warnings\" yarn rollup --configPlugin esbuild --config rollup.config.ts",
+    "build": "yarn tsc -b",
     "start": "cross-env NODE_OPTIONS=\"--no-warnings --experimental-modules --experimental-import-meta-resolve\" yarn node dist/esm/index.mjs",
     "schema": "yarn typescript-json-schema --out schema.json --skipLibCheck src/index.ts Options",
     "typecheck": "yarn tsc --noEmit",
@@ -46,7 +31,6 @@
     "lint": "yarn eslint --config eslint.config.js",
     "server": "yarn tsx --watch src/server",
     "dev": "yarn tsx --watch src/",
-    "dev1": "yarn tsx --watch src/",
     "client": "yarn tsx --watch src/client",
     "workers": "yarn tsx --watch src/workers",
     "generate:types": "yarn tsx scripts/generate_types.ts",

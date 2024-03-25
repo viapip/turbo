@@ -1,6 +1,5 @@
-import { IJoseVerify } from "@/jose/types"
-// import { WebSocket as WebSocketNode } from "ws";
-import { wrapSocket } from "./ws"
+import { IJoseVerify } from "../jose/types"
+import { wrapSocket } from "./utils"
 
 const WebSocketBrowser = globalThis.WebSocket ? WebSocket : class {}
 
@@ -12,8 +11,6 @@ export class WebSocketBrowserProxy extends WebSocketBrowser {
     jose?: IJoseVerify
   ) {
     super(address, protocols)
-    this.jose = jose
-
-    return wrapSocket(this)
+    return wrapSocket(this, jose)
   }
 }

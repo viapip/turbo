@@ -137,15 +137,8 @@ export default defineNuxtConfig({
     shim: true,
     typeCheck: true,
     tsConfig: {
-      exclude: ['node_modules', '../node_modules', '../../node_modules'],
+      exclude: ['node_modules'],
 
-      compilerOptions: {
-        skipLibCheck: true,
-        noUncheckedIndexedAccess: true,
-        // declaration: true,
-
-skipDefaultLibCheck: true,
-      },
     },
   },
 

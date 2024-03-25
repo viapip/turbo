@@ -1,6 +1,5 @@
 import { createClient } from 'redis'
 
-// export const redis = await createRedisStore()
 
 export async function createRedisStore() {
   const connection = createClient({ url: 'redis://redis:6379' })
