@@ -14,7 +14,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   const nuxtApp = useNuxtApp()
   const wsClient = createWSClient({
     url: 'ws://localhost:8080',
-    WebSocket: WebSocketBrowserProxy as typeof WebSocket,
+    WebSocket: WebSocketBrowserProxy as any,
 
     onOpen() {
       consola.info('Connected')
@@ -23,6 +23,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
       consola.info('Disconnected')
     },
   })
+  // const ws = wsClient.getConnection()
 
   const client = createTRPCProxyClient<AppRouter>({
     links: [

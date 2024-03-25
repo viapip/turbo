@@ -130,16 +130,21 @@ export default defineNuxtConfig({
       '@antfu/utils',
       'radash',
     ],
+
   },
 
   typescript: {
-    shim: false,
+    shim: true,
     typeCheck: true,
     tsConfig: {
-      exclude: ['packages', 'node_modules'],
+      exclude: ['node_modules', '../node_modules', '../../node_modules'],
+
       compilerOptions: {
+        skipLibCheck: true,
+        noUncheckedIndexedAccess: true,
         // declaration: true,
 
+skipDefaultLibCheck: true,
       },
     },
   },

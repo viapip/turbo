@@ -5,7 +5,7 @@ export type KeyPair = jose.GenerateKeyPairResult<
   jose.KeyLike & jose.JWK
 >
 
-export interface IJoseData {
+export interface IJoseVerify {
   key: KeyPair,
   jwks: JWTVerifyGetKey,
 }

@@ -5,23 +5,23 @@ import { sign, verify } from '@/jose/sign'
 
 import type { Buffer } from 'node:buffer'
 import type { ClientOptions } from 'ws'
-import { IJoseData } from '@/jose/types'
+import { IJoseVerify } from '@/jose/types'
 import  { WebSocketBrowserProxy } from './browser'
 
 const logger = consola.withTag('ws')
 
 declare module 'ws' {
   export interface WebSocketServer {
-    jose?: IJoseData
+    jose?: IJoseVerify
   }
   export interface WebSocket {
-    jose?: IJoseData
+    jose?: IJoseVerify
   }
 }
 
 declare global {
   export interface WebSocket {
-    jose?: IJoseData
+    jose?: IJoseVerify
   }
 }
 
@@ -44,31 +44,36 @@ type BufferLike =
   | { [Symbol.toPrimitive]: (hint: string) => string }
 
 export class WebSocketProxy extends WebSocketNode {
-  public jose?: IJoseData
+  public jose?: IJoseVerify
   public constructor(
     address: string | URL,
     protocols?: string | string[],
     options?: ClientOptions,
-    jose?: IJoseData,
+    jose?: IJoseVerify,
   ) {
     super(address, protocols, options)
     this.jose = jose
-    // return wrapSocket(this)
+    return wrapSocket(this)
   }
 }
 
 export function wrapSocket<T>(
   ws: WebSocketProxy | WebSocketBrowserProxy,
-  jose?: IJoseData,
+  jose?: IJoseVerify,
 ) {
   ws.jose = jose
+  const isBrowser = WebSocketBrowserProxy && ws instanceof WebSocketBrowserProxy
   return new Proxy(ws, {
     get: (target, prop, receiver) => {
       switch (prop) {
         case 'on':
           return customOn.bind(target)
-        case 'addEventListener':
-          return customOn.bind(target)
+        case 'addEventListener': 
+          if(isBrowser) {
+            logger.info('proxy:isBrowser', isBrowser)
+            return customOn.bind(target)
+          }
+          break
         case 'send':
           return customSend.bind(target)
       }
@@ -83,6 +88,7 @@ async function customOn(
   event: string,
   listener: (...args: any[]) => void
 ) {
+  
   const isBrowser = this instanceof WebSocketBrowserProxy
 
   if (!isBrowser) {
@@ -102,7 +108,6 @@ async function customOn(
       if (!this.jose) {
         return listener.call(this, data, isBinary)
       }
-      console.log('customOn', 'jose', this.jose);
       
       const jws = await verify(data.toString(), this.jose.jwks)
       logger.log('Receiving', event, JSON.stringify(jws))
@@ -127,7 +132,7 @@ async function customSend(
   if (!this.jose) {
     return isBrowser ? (this as WebSocket).send(data as string) : this.send(data, cb)
   }
-
+  logger.info('before send', data)
   const jws = await sign(this.jose.key, JSON.parse(data.toString()))
   
   logger.log('Sending', jws)

@@ -4,23 +4,17 @@ import { WebSocketServer } from 'ws'
 import { wrapSocket } from './ws'
 
 import type { ServerOptions, WebSocket } from 'ws'
-import { IJoseData, KeyPair } from '@/jose/types'
+import { IJoseVerify, KeyPair } from '@/jose/types'
 
 const logger = consola.withTag('wss')
 
-// declare module 'ws' {
-//   interface WebSocketServer {
-//     jose?: IJoseSourceData
-//   }
-// }
-
 export class WebSocketServerProxy extends WebSocketServer {
-  jose?: IJoseData
-  public constructor(options?: ServerOptions, jose?: IJoseData, callback?: () => void) {
+  jose?: IJoseVerify
+  public constructor(options?: ServerOptions, jose?: IJoseVerify, callback?: () => void) {
     super(options, callback)
     this.jose = jose
     logger.info('new WebSocketServer', jose)
-    // return wrapSocketServer(this)
+    return wrapSocketServer(this)
   }
 }
 

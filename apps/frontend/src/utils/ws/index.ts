@@ -36,7 +36,6 @@ export class WebSocketProxy extends WebSocket {
 export function wrapSocket(ws: WebSocket) {
   return new Proxy(ws, {
     get: (target, prop) => {
-      consola.info(prop)
       switch (prop) {
         case 'addEventListener':
           return customOn.bind(target)
@@ -74,7 +73,7 @@ async function customSend(
   data: BufferLike,
   // cb?: (error?: Error) => void,
 ) {
-  console.log('Sending', data)
+  // console.log('Sending', data)
 
   const jws = await sign(keys1 as KeyPair, JSON.parse(data.toString()))
   consola.log('Sending', jws)

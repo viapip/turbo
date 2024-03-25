@@ -9,7 +9,7 @@ import { router } from './router'
 import type { AppRouter } from './router'
 import { createLocalJWKSet } from 'jose'
 
-import { IJoseData, KeyPair, WebSocketServerProxy } from '@sozdev/share-libs'
+import { IJoseVerify, KeyPair, WebSocketServerProxy } from '@sozdev/share-libs'
 import { jwks, keys1 } from '@/jose/keys'
 
 const logger = consola.withTag('server')
@@ -30,11 +30,7 @@ export async function bootstrap() {
     },
   })
   
-  // const jose = await getJoseData()
-  const jose = {
-    jwks: jwks,
-    key: keys1
-  }
+  const jose = await getJose()
   
   applyWSSHandler<AppRouter>({
     wss: new WebSocketServerProxy(app, jose),
@@ -49,7 +45,7 @@ export async function bootstrap() {
       }
     },
   })
-  async function getJoseData(): Promise<IJoseData> {
+  async function getJose(): Promise<IJoseVerify> {
   
    const keys1: KeyPair = JSON.parse(await readFile(
     'keys/key1.jwk',
@@ -72,7 +68,7 @@ export async function bootstrap() {
   
   return {
     jwks,
-    key: keys1,
+    key: keys2,
   }
   
   }

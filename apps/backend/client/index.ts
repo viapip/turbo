@@ -9,7 +9,7 @@ import {
 } from '@trpc/client'
 import consola from 'consola'
 
-import { IJoseData, KeyPair, transformer } from '@sozdev/share-libs'
+import { IJoseVerify, KeyPair, transformer } from '@sozdev/share-libs'
 import { WebSocketProxy } from '@sozdev/share-libs'
 
 import type { AppRouter } from '~/server/router'
@@ -32,11 +32,11 @@ const wsClient = createWSClient({
 
 const ws = wsClient.getConnection()
 
-// ws.jose = await getJoseData()
-ws.jose = {
-  jwks: jwks,
-  key: keys1
-}
+ws.jose = await getJoseData()
+// ws.jose = {
+//   jwks: jwks,
+//   key: keys1
+// }
 
 const client = createTRPCProxyClient<AppRouter>({
   links: [wsLink({ client: wsClient })],
@@ -45,7 +45,7 @@ const client = createTRPCProxyClient<AppRouter>({
 
 const n = Number.parseInt(process.argv[2], 10) || 1
 const users = await client.data.getAll.query()
-
+logger.info('Users:', users.length)
 const subscription = client.data.randomNumber.subscribe(n, {
   onStarted() {
     logger.info('Subscription started')
@@ -102,7 +102,7 @@ while (true) {
 }
 
 process.exit(0)
-async function getJoseData(): Promise<IJoseData> {
+async function getJoseData(): Promise<IJoseVerify> {
   
   const keys1: KeyPair = JSON.parse(await readFile(
    'keys/key1.jwk',

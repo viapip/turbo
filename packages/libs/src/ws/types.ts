@@ -1,2 +1,2 @@
-import { IJoseData } from "@/jose/types";
+import { IJoseVerify } from "@/jose/types";
 
