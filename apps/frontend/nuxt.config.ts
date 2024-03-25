@@ -92,8 +92,8 @@ export default defineNuxtConfig({
   },
 
   css: [
-    '~/assets/fonts/inter/inter.css',
-    '~/assets/fonts/montserrat/montserrat.css',
+    // '~/assets/fonts/inter/inter.css',
+    // '~/assets/fonts/montserrat/montserrat.css',
   ],
 
   tailwindcss: {

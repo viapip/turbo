@@ -16,6 +16,9 @@ export type CreateContextOptions =
 
   const logger = consola.withTag('ajv/server')
   
+export async function createContext(
+  _opts: CreateContextOptions,
+) {
   const redis = await createRedisStore()
   const mongodb = await createMongoDBStore()
   
@@ -52,9 +55,6 @@ export type CreateContextOptions =
   }
 
 const ajv = await createAjv(options)
-export async function createContext(
-  _opts: CreateContextOptions,
-) {
   return {
     ajv,
     redis,

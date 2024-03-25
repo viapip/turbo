@@ -9,7 +9,7 @@ import { router } from './router'
 import type { AppRouter } from './router'
 import { createLocalJWKSet } from 'jose'
 
-import { jwks, keys1 } from '@/jose/keys'
+import { jwks, keys1, keys2 } from '@/jose/keys'
 
 import { IJoseVerify, KeyPair, WebSocketServerProxy } from '@sozdev/share-libs'
 
@@ -32,8 +32,8 @@ export async function bootstrap() {
 
   // const jose = await getJoseVerify()
   const jose = {
-    jwks: jwks,
-    key: keys1
+    jwks,
+    key: keys2
   }
 
   applyWSSHandler<AppRouter>({

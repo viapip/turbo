@@ -43,17 +43,17 @@ async function getJoseVerify(): Promise<IJoseVerify> {
   const keys1 = {
     publicKey: {
       kty: 'EC',
-      x: 'D8qVLV7UckTvFFMB2dRumgO1hb-VctMkcdCfLWLaFvQ',
-      y: 'pKHQOfL0K8W6FZipThjF9XYuXrciOQeQE4ei55vSXes',
+      x: 'C4NS5Hxxqh5-_NDTJ_0fRTINJIf7ud32HlfCwYUNerQ',
+      y: 'aVPGrtD5j60SfDPR26fUX-ffXaW91-3bEpxB41XBJZA',
       crv: 'P-256',
       kid: 'key1',
     },
     privateKey: {
       kty: 'EC',
-      x: 'D8qVLV7UckTvFFMB2dRumgO1hb-VctMkcdCfLWLaFvQ',
-      y: 'pKHQOfL0K8W6FZipThjF9XYuXrciOQeQE4ei55vSXes',
+      x: 'C4NS5Hxxqh5-_NDTJ_0fRTINJIf7ud32HlfCwYUNerQ',
+      y: 'aVPGrtD5j60SfDPR26fUX-ffXaW91-3bEpxB41XBJZA',
       crv: 'P-256',
-      d: 'CGUOSodDIy0tqTpgDxH0j4ReoMA9tzeMXUVmZ61G0Y0',
+      d: 'TntgBuB2BhlC8WT5WZWPUf7TSgIugvJwwYwpFx5K7Ms',
       kid: 'key1',
     },
   } as KeyPair
@@ -61,17 +61,17 @@ async function getJoseVerify(): Promise<IJoseVerify> {
   const keys2 = {
     publicKey: {
       kty: 'EC',
-      x: '8a8o_RUGD1_piE5ouA9ZyHI-4FHIZEZgTO6bW5MORYQ',
-      y: 'EVyoFgTSSyymg1pAStH42OpQezzOMM12kVCS6KHpm-I',
+      x: 'Ngdlc4RyOOLIrlkf7GmB-7UqLuOsoWd8R1rxVy_2kVY',
+      y: 'eW7NQ1oo3RjMbJW3gYLD8qEPWkQ-DEXBYIp-gP8kwlI',
       crv: 'P-256',
       kid: 'key2',
     },
     privateKey: {
       kty: 'EC',
-      x: '8a8o_RUGD1_piE5ouA9ZyHI-4FHIZEZgTO6bW5MORYQ',
-      y: 'EVyoFgTSSyymg1pAStH42OpQezzOMM12kVCS6KHpm-I',
+      x: 'Ngdlc4RyOOLIrlkf7GmB-7UqLuOsoWd8R1rxVy_2kVY',
+      y: 'eW7NQ1oo3RjMbJW3gYLD8qEPWkQ-DEXBYIp-gP8kwlI',
       crv: 'P-256',
-      d: 'KUiphkKbdmzYT_wnn0LFdfGXI0EFgRTV2sZEI1XRH8g',
+      d: 'XaD6RzpyryC2azMe-lklZVl71SkHGRt9BK6tY_qJnM8',
       kid: 'key2',
     },
   } as KeyPair

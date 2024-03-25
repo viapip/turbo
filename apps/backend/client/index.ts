@@ -14,7 +14,7 @@ import { WebSocketProxy } from '@sozdev/share-libs'
 
 import type { AppRouter } from '~/server/router'
 import { createLocalJWKSet } from 'jose'
-import { jwks, keys1 } from '@/jose/keys'
+import { jwks, keys1, keys2 } from '@/jose/keys'
 
 const logger = consola.withTag('client')
 
@@ -32,11 +32,11 @@ const wsClient = createWSClient({
 
 const ws = wsClient.getConnection()
 
-// ws.jose = await getJoseVerify()
-ws.jose = {
-  jwks: jwks,
-  key: keys1
-}
+ws.jose = await getJoseVerify()
+// ws.jose = {
+//   jwks,
+//   key: keys1
+// }
 
 const client = createTRPCProxyClient<AppRouter>({
   links: [wsLink({ client: wsClient })],

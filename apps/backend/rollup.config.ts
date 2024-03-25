@@ -9,11 +9,4 @@ export default build({
   dts: {
     respectExternal: true,
   },
-  // dts: {
-  //   respectExternal: false,
-  //   compilerOptions: {
-  //     declarationDir: './src/types/',
-  //     declaration: true,
-  //   },
-  // },
 })

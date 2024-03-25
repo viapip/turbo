@@ -5,6 +5,7 @@ import { sign, verify } from '../jose/sign'
 import { IJoseVerify } from '../jose/types'
 
 import consola from 'consola'
+import { JWTPayload } from 'jose'
 
 type BufferLike =
   | string
@@ -74,22 +75,25 @@ async function customOn(
     if (event === 'message') {
       const [data, isBinary] = args as [BufferLike, boolean]
 
-      console.log('customOn', data)
+      console.log('customOn', data.toString())
 
       if (!this.jose) {
         return listener.call(this, data, isBinary)
       }
 
       logger.info('before verify', this.jose)
-      const jws = await verify(data.toString(), this.jose.jwks)
-      logger.log('Receiving', event, JSON.stringify(jws))
 
-      listener.call(this, JSON.stringify(jws), isBinary)
+      const { payload , ...jws} = await verify(data.toString(), this.jose.jwks)
+      
+      logger.log('Receiving', event, JSON.stringify(payload))
+
+      listener.call(this, JSON.stringify({...jws, ...payload as object}), isBinary)
 
       return
     }
 
-
+    logger.log('Receiving', event, args)
+    
     listener.call(this, ...args)
   }
 }
@@ -108,11 +112,13 @@ async function customSend(
       : this.send(data, cb)
   }
   
-  logger.info('before send', data)
+  logger.info('before send:data', data)
+  logger.info('before send:jose', this.jose)
 
-  const payload = {data: JSON.parse(data.toString())}
 
-  const jws = await sign(this.jose.key, payload)
+  const jws = await sign(this.jose.key, {
+    payload: JSON.parse(data.toString())
+  })
 
   logger.log('Sending', jws)
 

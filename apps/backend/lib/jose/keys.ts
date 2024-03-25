@@ -8,6 +8,7 @@ export const keys1: KeyPair = JSON.parse(await readFile(
   'keys/key1.jwk',
   'utf8',
 ))
+
 export const keys2: KeyPair = JSON.parse(await readFile(
   'keys/key2.jwk',
   'utf8',
