@@ -16,7 +16,7 @@ export async function sign(
   const { privateKey } = keyPair
   const { kid } = privateKey
 
-  const signKey = await importJWK(privateKey)
+  const signKey = await importJWK(privateKey, alg)
 
   return new SignJWT(payload)
     .setIssuer(options.issuer)

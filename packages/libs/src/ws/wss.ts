@@ -1,7 +1,7 @@
 import consola from 'consola'
 import { WebSocketServer } from 'ws'
 
-import { wrapSocket } from './utils'
+import { wrapSocket } from './wrapper'
 
 import type { ServerOptions, WebSocket } from 'ws'
 import { IJoseVerify, KeyPair } from '../jose/types'
@@ -38,7 +38,7 @@ async function customOn(
   this.on(event, async (...args: any[]) => {
     if (event === 'connection') {
       logger.info('Connection')
-      args[0] = wrapSocket(args[0] as WebSocket, this.jose)
+      // args[0] = wrapSocket(args[0] as WebSocket, this.jose)
     }
 
     listener.call(this, ...args)

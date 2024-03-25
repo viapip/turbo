@@ -45,7 +45,7 @@
     "clean": "yarn exec rm -rf dist",
     "lint": "yarn eslint --config eslint.config.js",
     "server": "yarn tsx --watch src/server",
-    "dev": "yarn tsx --watch src/server",
+    "dev": "yarn server",
     "client": "yarn tsx --watch ./client",
     "workers": "yarn tsx --watch src/workers",
     "generate:types": "yarn tsx scripts/generate_types.ts",

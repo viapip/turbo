@@ -1,7 +1,7 @@
 import {WebSocket as WebSocketNode} from 'ws'
 import type { ClientOptions } from 'ws'
 import { IJoseVerify } from '../jose/types'
-import { wrapSocket } from './utils'
+import { wrapSocket } from './wrapper'
 
 declare module 'ws' {
   export interface WebSocketServer {
@@ -27,8 +27,7 @@ export class WebSocketProxy extends WebSocketNode {
     jose?: IJoseVerify,
   ) {
     super(address, protocols, options)
-    this.jose = jose
-    return wrapSocket(this)
+    return wrapSocket(this, jose)
   }
 }
 

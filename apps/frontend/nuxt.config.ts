@@ -134,12 +134,7 @@ export default defineNuxtConfig({
   },
 
   typescript: {
-    shim: true,
-    typeCheck: true,
-    tsConfig: {
-      exclude: ['node_modules'],
-
-    },
+    shim: false,
   },
 
   nitro: {

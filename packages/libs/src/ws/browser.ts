@@ -1,5 +1,5 @@
 import { IJoseVerify } from "../jose/types"
-import { wrapSocket } from "./utils"
+import { wrapSocket } from "./wrapper"
 
 const WebSocketBrowser = globalThis.WebSocket ? WebSocket : class {}
 

@@ -35,10 +35,12 @@ export function wrapSocket<T>(
     get: (target, prop, receiver) => {
       switch (prop) {
         case 'on':
-          return customOn.bind(target)
+          if (!isBrowser) {
+            return customOn.bind(target)
+          }
+          break
         case 'addEventListener':
           if (isBrowser) {
-            logger.info('proxy:isBrowser', isBrowser)
             return customOn.bind(target)
           }
           break
@@ -63,7 +65,7 @@ async function customOn(
     return
   }
 
-  ;(this as WebSocket).addEventListener(event, customListener)
+  (this as WebSocket).addEventListener(event, customListener)
 
   async function customListener(
     this: WebSocketProxy | WebSocketBrowserProxy,
@@ -86,6 +88,7 @@ async function customOn(
 
       return
     }
+
 
     listener.call(this, ...args)
   }
