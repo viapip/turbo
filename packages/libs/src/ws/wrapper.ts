@@ -107,8 +107,12 @@ async function customSend(
       ? (this as WebSocket).send(data as string)
       : this.send(data, cb)
   }
+  
   logger.info('before send', data)
-  const jws = await sign(this.jose.key, JSON.parse(data.toString()))
+
+  const payload = {data: JSON.parse(data.toString())}
+
+  const jws = await sign(this.jose.key, payload)
 
   logger.log('Sending', jws)
 
