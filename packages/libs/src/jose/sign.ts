@@ -1,7 +1,7 @@
-import { SignJWT, importJWK, jwtVerify } from 'jose'
+import { SignJWT, importJWK, jwtVerify, } from 'jose'
 
 import type { KeyPair } from './types'
-import type { JWTPayload, JWTVerifyGetKey, VerifyOptions } from 'jose'
+import type { JWTPayload, JWTVerifyGetKey, KeyLike, VerifyOptions } from 'jose'
 
 const alg = 'ES256'
 const options = {
@@ -19,8 +19,8 @@ export async function sign(
   const signKey = await importJWK(privateKey, alg)
 
   return new SignJWT(payload)
-    .setIssuer(options.issuer)
-    .setAudience(options.audience)
+    // .setIssuer(options.issuer)
+    // .setAudience(options.audience)
     .setProtectedHeader({ alg, kid })
     .setExpirationTime('10m')
     .setIssuedAt()
@@ -35,7 +35,7 @@ export async function verify(
   const { payload } = await jwtVerify(
     jwt,
     keySet,
-    verifyOptions,
+    verifyOptions
   )
 
   return payload

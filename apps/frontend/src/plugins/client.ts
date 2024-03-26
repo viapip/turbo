@@ -40,54 +40,52 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
 })
 
 async function getJoseVerify(): Promise<IJoseVerify> {
-  const keys1 = {
-    publicKey: {
-      kty: 'EC',
-      x: 'C4NS5Hxxqh5-_NDTJ_0fRTINJIf7ud32HlfCwYUNerQ',
-      y: 'aVPGrtD5j60SfDPR26fUX-ffXaW91-3bEpxB41XBJZA',
-      crv: 'P-256',
-      kid: 'key1',
-    },
-    privateKey: {
-      kty: 'EC',
-      x: 'C4NS5Hxxqh5-_NDTJ_0fRTINJIf7ud32HlfCwYUNerQ',
-      y: 'aVPGrtD5j60SfDPR26fUX-ffXaW91-3bEpxB41XBJZA',
-      crv: 'P-256',
-      d: 'TntgBuB2BhlC8WT5WZWPUf7TSgIugvJwwYwpFx5K7Ms',
-      kid: 'key1',
-    },
-  } as KeyPair
+  // const keys1 = {
+  //   "publicKey": {
+  //     "kty": "EC",
+  //     "x": "D8qVLV7UckTvFFMB2dRumgO1hb-VctMkcdCfLWLaFvQ",
+  //     "y": "pKHQOfL0K8W6FZipThjF9XYuXrciOQeQE4ei55vSXes",
+  //     "crv": "P-256",
+  //     "kid": "key1"
+  //   },
+  //   "privateKey": {
+  //     "kty": "EC",
+  //     "x": "D8qVLV7UckTvFFMB2dRumgO1hb-VctMkcdCfLWLaFvQ",
+  //     "y": "pKHQOfL0K8W6FZipThjF9XYuXrciOQeQE4ei55vSXes",
+  //     "crv": "P-256",
+  //     "d": "CGUOSodDIy0tqTpgDxH0j4ReoMA9tzeMXUVmZ61G0Y0",
+  //     "kid": "key1"
+  //   }
+  // } as KeyPair
 
   const keys2 = {
     publicKey: {
       kty: 'EC',
-      x: 'Ngdlc4RyOOLIrlkf7GmB-7UqLuOsoWd8R1rxVy_2kVY',
-      y: 'eW7NQ1oo3RjMbJW3gYLD8qEPWkQ-DEXBYIp-gP8kwlI',
+      x: '8a8o_RUGD1_piE5ouA9ZyHI-4FHIZEZgTO6bW5MORYQ',
+      y: 'EVyoFgTSSyymg1pAStH42OpQezzOMM12kVCS6KHpm-I',
       crv: 'P-256',
       kid: 'key2',
     },
     privateKey: {
       kty: 'EC',
-      x: 'Ngdlc4RyOOLIrlkf7GmB-7UqLuOsoWd8R1rxVy_2kVY',
-      y: 'eW7NQ1oo3RjMbJW3gYLD8qEPWkQ-DEXBYIp-gP8kwlI',
+      x: '8a8o_RUGD1_piE5ouA9ZyHI-4FHIZEZgTO6bW5MORYQ',
+      y: 'EVyoFgTSSyymg1pAStH42OpQezzOMM12kVCS6KHpm-I',
       crv: 'P-256',
-      d: 'XaD6RzpyryC2azMe-lklZVl71SkHGRt9BK6tY_qJnM8',
+      d: 'KUiphkKbdmzYT_wnn0LFdfGXI0EFgRTV2sZEI1XRH8g',
       kid: 'key2',
     },
   } as KeyPair
 
-  //  const keys1Private = await importJWK(keys1.privateKey)
-  //  const keys2Private = await importJWK(keys2.privateKey)
+  // const publicKey = await importJWK(keys2.publicKey, 'ES256')
 
   const jwks = createLocalJWKSet({
-    keys: [
-      keys1.publicKey,
-      keys2.publicKey,
-    ],
+    keys: [keys2.publicKey],
   })
+
+  // console.log('test', publicKey);
 
   return {
     jwks,
-    key: keys1,
+    key: keys2,
   }
 }

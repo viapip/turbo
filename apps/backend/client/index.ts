@@ -125,7 +125,7 @@ async function getJoseVerify(): Promise<IJoseVerify> {
   jwks(keys1.privateKey, )
  
  return {
-   jwks,
+   jwks: jwks,
    key: keys1,
  }
  

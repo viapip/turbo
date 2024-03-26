@@ -12,11 +12,11 @@ declare module 'ws' {
   }
 }
 
-declare global {
-  export interface WebSocket {
-    jose?: IJoseVerify
-  }
-}
+// declare global {
+//   export interface WebSocket {
+//     jose?: IJoseVerify
+//   }
+// }
 
 export class WebSocketProxy extends WebSocketNode {
   public jose?: IJoseVerify
