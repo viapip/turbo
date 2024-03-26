@@ -3,20 +3,6 @@ import type { ClientOptions } from 'ws'
 import { IJoseVerify } from '../jose/types'
 import { wrapSocket } from './wrapper'
 
-declare module 'ws' {
-  export interface WebSocketServer {
-    jose?: IJoseVerify
-  }
-  export interface WebSocket {
-    jose?: IJoseVerify
-  }
-}
-
-// declare global {
-//   export interface WebSocket {
-//     jose?: IJoseVerify
-//   }
-// }
 
 export class WebSocketProxy extends WebSocketNode {
   public jose?: IJoseVerify

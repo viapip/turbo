@@ -52,34 +52,26 @@ async function customOn(
 
   async function customListener(this: WebSocketProxy, ...args: any[]) {
     if (event === 'message') {
-      let [messageData, isBinary] = args as
-        | [BufferLike, boolean]
-        | [MessageEvent<string>]
-      let data = messageData
-
-      if (messageData instanceof MessageEvent) {
-        data = messageData.data
-        isBinary = undefined
-      }
+      let [data, isBinary] = args as | [BufferLike, boolean]
 
       if (!this.jose) {
-        return listener.call(this, messageData, isBinary)
+        logger.debug('Receiving: jose not initialized', data)
+
+        return listener.call(this, data, isBinary)
       }
 
       const { payload, ...jws } = await verify(data.toString(), this.jose.jwks)
 
-      logger.log('Receiving', event, JSON.stringify(payload))
-      logger.log('Receiving:data', messageData)
-      listener.call(
+      logger.debug('Receiving payload"', { payload })
+
+      return listener.call(
         this,
         JSON.stringify({ ...jws, ...(payload as object) }),
         isBinary,
       )
-
-      return
     }
 
-    logger.log('Receiving', event, args)
+    logger.debug('Receiving', event, args)
 
     listener.call(this, ...args)
   }
@@ -90,20 +82,18 @@ async function customSend(
   data: BufferLike,
   cb?: (error?: Error) => void,
 ) {
-  console.log('customSend', data)
-
   if (!this.jose) {
+    logger.debug('Sending: jose not initialized', data)
     return this.send(data, cb)
   }
 
-  logger.info('before send:data', data)
-  logger.info('before send:jose', this.jose)
+  logger.debug('Signing payload: ', { payload: data, jose: this.jose })
 
   const jws = await sign(this.jose.key, {
     payload: JSON.parse(data.toString()),
   })
 
-  logger.log('Sending', jws)
+  logger.debug('Sending', jws)
 
   this.send(jws, cb)
 }

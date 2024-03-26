@@ -12,6 +12,7 @@ import { createLocalJWKSet, importJWK } from 'jose'
 import { jwks, keys1, keys2 } from '@/jose/keys'
 
 import { IJoseVerify, KeyPair, WebSocketServerProxy } from '@sozdev/share-libs'
+import { EventEmitter } from 'node:events'
 
 const logger = consola.withTag('server')
 
@@ -97,14 +98,22 @@ export async function bootstrap() {
       ],
     })
 
-    const publicKey = await importJWK(keys2.publicKey, 'ES256')
+    // const publicKey = await importJWK(keys2.publicKey, 'ES256')
 
     return {
-      jwks: publicKey,
-      key: keys2,
+      jwks,
+      key: keys1,
     }
   }
-
+  const myEmitter = new EventEmitter();
+  app.server.on('connection', (ws) => {
+    logger.info('connection')
+    // TODO
+    // ws.on('connect', () => {
+    //   logger.info('connected')
+    //   // ws.
+    // })
+  } )
   app.listen(8080)
 }
 

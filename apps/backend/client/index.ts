@@ -14,7 +14,6 @@ import { WebSocketProxy } from '@sozdev/share-libs'
 
 import type { AppRouter } from '~/server/router'
 import { createLocalJWKSet } from 'jose'
-import { jwks, keys1, keys2 } from '@/jose/keys'
 
 const logger = consola.withTag('client')
 
@@ -32,7 +31,7 @@ const wsClient = createWSClient({
 
 const ws = wsClient.getConnection()
 
-ws.jose = await getJoseVerify()
+// ws.jose = await getJoseVerify()
 // ws.jose = {
 //   jwks,
 //   key: keys1
@@ -122,7 +121,6 @@ async function getJoseVerify(): Promise<IJoseVerify> {
       keys2.publicKey,
     ],
   })
-  jwks(keys1.privateKey, )
  
  return {
    jwks: jwks,

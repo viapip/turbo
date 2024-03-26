@@ -19630,7 +19630,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "with-vue-nuxt@workspace:."
   dependencies:
-    concurrently: "npm:^8.2.2"
     eslint: "npm:^8.57.0"
     prettier: "npm:^3.2.5"
     tsconfig: "npm:*"

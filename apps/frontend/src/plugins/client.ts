@@ -28,6 +28,10 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
 
   ws.jose = await getJoseVerify()
 
+  ws.addEventListener('lookup', (e) => {
+    consola.info('lookup', e)
+  })
+
   const client = createTRPCProxyClient<AppRouter>({
     links: [
       wsLink({
@@ -40,23 +44,23 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
 })
 
 async function getJoseVerify(): Promise<IJoseVerify> {
-  // const keys1 = {
-  //   "publicKey": {
-  //     "kty": "EC",
-  //     "x": "D8qVLV7UckTvFFMB2dRumgO1hb-VctMkcdCfLWLaFvQ",
-  //     "y": "pKHQOfL0K8W6FZipThjF9XYuXrciOQeQE4ei55vSXes",
-  //     "crv": "P-256",
-  //     "kid": "key1"
-  //   },
-  //   "privateKey": {
-  //     "kty": "EC",
-  //     "x": "D8qVLV7UckTvFFMB2dRumgO1hb-VctMkcdCfLWLaFvQ",
-  //     "y": "pKHQOfL0K8W6FZipThjF9XYuXrciOQeQE4ei55vSXes",
-  //     "crv": "P-256",
-  //     "d": "CGUOSodDIy0tqTpgDxH0j4ReoMA9tzeMXUVmZ61G0Y0",
-  //     "kid": "key1"
-  //   }
-  // } as KeyPair
+  const keys1 = {
+    publicKey: {
+      kty: 'EC',
+      x: 'D8qVLV7UckTvFFMB2dRumgO1hb-VctMkcdCfLWLaFvQ',
+      y: 'pKHQOfL0K8W6FZipThjF9XYuXrciOQeQE4ei55vSXes',
+      crv: 'P-256',
+      kid: 'key1',
+    },
+    privateKey: {
+      kty: 'EC',
+      x: 'D8qVLV7UckTvFFMB2dRumgO1hb-VctMkcdCfLWLaFvQ',
+      y: 'pKHQOfL0K8W6FZipThjF9XYuXrciOQeQE4ei55vSXes',
+      crv: 'P-256',
+      d: 'CGUOSodDIy0tqTpgDxH0j4ReoMA9tzeMXUVmZ61G0Y0',
+      kid: 'key1',
+    },
+  } as KeyPair
 
   const keys2 = {
     publicKey: {
@@ -76,10 +80,10 @@ async function getJoseVerify(): Promise<IJoseVerify> {
     },
   } as KeyPair
 
-  // const publicKey = await importJWK(keys2.publicKey, 'ES256')
+  // const publicKey = await importJWK(keys1.publicKey, 'ES256')
 
   const jwks = createLocalJWKSet({
-    keys: [keys2.publicKey],
+    keys: [keys1.publicKey],
   })
 
   // console.log('test', publicKey);
