@@ -1,7 +1,7 @@
 import { type IJoseVerify, type KeyPair, WebSocketBrowserProxy, transformer } from '@sozdev/share-libs/dist/browser'
 import { type CreateTRPCProxyClient, createTRPCProxyClient, createWSClient, wsLink } from '@trpc/client'
 import consola from 'consola'
-import { createLocalJWKSet } from 'jose'
+import { createLocalJWKSet, createRemoteJWKSet, importJWK } from 'jose'
 
 import type { AppRouter } from '@sozdev/backend'
 
@@ -31,6 +31,8 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   ws.addEventListener('lookup', (e) => {
     consola.info('lookup', e)
   })
+
+
 
   const client = createTRPCProxyClient<AppRouter>({
     links: [
@@ -80,16 +82,18 @@ async function getJoseVerify(): Promise<IJoseVerify> {
     },
   } as KeyPair
 
-  // const publicKey = await importJWK(keys1.publicKey, 'ES256')
+  const publicKey = await importJWK(keys1.publicKey, 'ES256')
 
   const jwks = createLocalJWKSet({
     keys: [keys1.publicKey],
   })
 
-  // console.log('test', publicKey);
+  const test = createRemoteJWKSet(new URL('http://localhost:4000/api/jwks'))
+
+  console.log('test', publicKey);
 
   return {
-    jwks,
+    jwks: test,
     key: keys2,
   }
 }

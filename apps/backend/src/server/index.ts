@@ -32,10 +32,6 @@ export async function bootstrap() {
   })
 
   const jose = await getJoseVerify()
-  // const jose = {
-  //   jwks,
-  //   key: keys2
-  // }
 
   applyWSSHandler<AppRouter>({
     wss: new WebSocketServerProxy(app, jose),
@@ -50,6 +46,7 @@ export async function bootstrap() {
       }
     },
   })
+
   async function getJoseVerify(): Promise<IJoseVerify> {
     // const keys1: KeyPair = JSON.parse(await readFile('keys/key1.jwk', 'utf8'))
     // const keys2: KeyPair = JSON.parse(await readFile('keys/key2.jwk', 'utf8'))
@@ -105,15 +102,8 @@ export async function bootstrap() {
       key: keys1,
     }
   }
-  const myEmitter = new EventEmitter();
-  app.server.on('connection', (ws) => {
-    logger.info('connection')
-    // TODO
-    // ws.on('connect', () => {
-    //   logger.info('connected')
-    //   // ws.
-    // })
-  } )
+
+
   app.listen(8080)
 }
 

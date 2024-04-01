@@ -9,7 +9,11 @@
     "lint": {},
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+        "dependsOn": [
+          "@sozdev/share-libs#build",
+          "@sozdev/backend#build"
+        ]
     }
   }
 }

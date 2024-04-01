@@ -20,7 +20,7 @@ export const dataRouter = rootRouter({
     .query(async ({
       input: id,
       ctx: { mongodb },
-    }) => mongodb.data.findOne(new ObjectId(id))),
+    }) => await mongodb.data.findOne(new ObjectId(id)) as {_id: ObjectId}),
 
   postItem: publicProcedure
     .input(z.object({

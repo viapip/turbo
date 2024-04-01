@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div>
+  <div class="w-full">
     <!-- <WinboxWindow
       :params="{
         id: 'page-current',
@@ -21,6 +21,7 @@
       }"
       > -->
     <Test />
+    <TestList/>
     <!-- </WinboxWindow> -->
   </div>
 </template>

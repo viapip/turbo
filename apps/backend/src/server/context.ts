@@ -16,11 +16,11 @@ export type CreateContextOptions =
 
   const logger = consola.withTag('ajv/server')
   
+  const redis = await createRedisStore()
+  const mongodb = await createMongoDBStore()
 export async function createContext(
   _opts: CreateContextOptions,
 ) {
-  const redis = await createRedisStore()
-  const mongodb = await createMongoDBStore()
   
   const files = await glob('*.json', {
     cwd: 'defs',

@@ -15,14 +15,14 @@ export class WebSocketBrowserProxy extends WebSocket {
     super(address, protocols)
     this.jose = jose
 
-    return wrapSocket(this)
+    // return wrapSocket(this)
   }
 }
 
 export function wrapSocket<T>(ws: WebSocketBrowserProxy) {
   return new Proxy(ws, {
     get: (target, prop) => {
-      logger.debug('Getting', prop, target)
+      logger.info('Getting', prop, target)
       switch (prop) {
         case 'addEventListener':
           return customOn.bind(target)
@@ -52,27 +52,27 @@ async function customOn(
       let data = event.data
 
       if (!this.jose) {
-        logger.debug('Receiving: jose not initialized', data)
+        logger.info('Receiving: jose not initialized', data)
 
         return listener.call(this, event)
       }
 
       const { payload, ...jws } = await verify(data.toString(), this.jose.jwks)
 
-      const newEvent = createMessageEvent(payload, event)
+      const newEvent = createMessageEvent(event, payload)
 
-      logger.debug('Receiving payload"', { payload, event: newEvent })
+      logger.info('Receiving payload"', { payload, event: newEvent })
 
       return listener.call(this, newEvent)
     }
 
-    logger.debug('Receiving', event, args)
+    logger.info('Receiving', event, args)
 
     return listener.call(this, ...args)
   }
 }
 
-function createMessageEvent(payload: unknown, event: MessageEvent) {
+function createMessageEvent(event: MessageEvent, payload: unknown) {
   return new MessageEvent('message', {
     data: JSON.stringify(payload),
     origin: event.origin,
@@ -84,18 +84,18 @@ function createMessageEvent(payload: unknown, event: MessageEvent) {
 
 async function customSend(this: WebSocketBrowserProxy, data: BufferLike) {
   if (!this.jose) {
-    logger.debug('Sending: jose not initialized', data)
+    logger.info('Sending: jose not initialized', data)
     this.send(data)
     return
   }
 
-  logger.debug('Signing payload: ', { payload: data, jose: this.jose })
+  logger.info('Signing payload: ', { payload: data, jose: this.jose })
 
   const jws = await sign(this.jose.key, {
     payload: JSON.parse(data.toString()),
   })
 
-  logger.debug('Sending', jws)
+  logger.info('Sending', jws)
 
   this.send(jws)
 }
