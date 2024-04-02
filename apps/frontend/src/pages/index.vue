@@ -1,10 +1,14 @@
 <script setup>
+const { $trpc } = useNuxtApp()
 </script>
 
 <template>
   <div class="w-full">
-    <Test />
-    <TestList />
+    <div v-if="$trpc">
+      <Test />
+      <TestList />
+    </div>
+
     <Auth />
   </div>
 </template>

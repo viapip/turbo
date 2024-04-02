@@ -3,8 +3,8 @@ import { WebSocketServer } from 'ws'
 
 import { wrapSocket } from './wrapper'
 
+import type { IJoseVerify } from '../jose/types'
 import type { ServerOptions, WebSocket } from 'ws'
-import { IJoseVerify, KeyPair } from '../jose/types'
 
 const logger = consola.withTag('wss')
 
@@ -14,16 +14,15 @@ export class WebSocketServerProxy extends WebSocketServer {
     super(options, callback)
     this.jose = jose
     logger.info('new WebSocketServer', jose)
-    // return wrapSocketServer(this)
+    return wrapSocketServer(this)
   }
 }
 
 export function wrapSocketServer(wss: WebSocketServer) {
   return new Proxy(wss, {
     get: (target, prop, receiver) => {
-      if (prop === 'on') {
+      if (prop === 'on')
         return customOn.bind(target)
-      }
 
       return Reflect.get(target, prop, receiver)
     },

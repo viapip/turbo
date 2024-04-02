@@ -39,7 +39,7 @@ const itemsId = computed(() => {
         data-key="objectFields-virtuallist"
         :page-mode="false"
         :data-ids="itemsId"
-        item-class="pb-4"
+        item-class=""
         :data-getter="itemGetter"
         :data-component="TestItem"
         :estimate-size="76"

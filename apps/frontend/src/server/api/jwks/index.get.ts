@@ -1,22 +1,20 @@
-
-
-export default eventHandler((ctx) => {
+export default eventHandler((_ctx) => {
   const jwks = {
     keys: [
       {
-        "kty": "EC",
-        "x": "8a8o_RUGD1_piE5ouA9ZyHI-4FHIZEZgTO6bW5MORYQ",
-        "y": "EVyoFgTSSyymg1pAStH42OpQezzOMM12kVCS6KHpm-I",
-        "crv": "P-256",
-        "kid": "key2",
+        kty: 'EC',
+        x: '8a8o_RUGD1_piE5ouA9ZyHI-4FHIZEZgTO6bW5MORYQ',
+        y: 'EVyoFgTSSyymg1pAStH42OpQezzOMM12kVCS6KHpm-I',
+        crv: 'P-256',
+        kid: 'key2',
       },
       {
-        "kty": "EC",
-        "x": "D8qVLV7UckTvFFMB2dRumgO1hb-VctMkcdCfLWLaFvQ",
-        "y": "pKHQOfL0K8W6FZipThjF9XYuXrciOQeQE4ei55vSXes",
-        "crv": "P-256",
-        "kid": "key1",
-      }
+        kty: 'EC',
+        x: 'D8qVLV7UckTvFFMB2dRumgO1hb-VctMkcdCfLWLaFvQ',
+        y: 'pKHQOfL0K8W6FZipThjF9XYuXrciOQeQE4ei55vSXes',
+        crv: 'P-256',
+        kid: 'key1',
+      },
     ],
   }
 

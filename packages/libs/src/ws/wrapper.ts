@@ -1,11 +1,10 @@
-import { WebSocketBrowserProxy } from './browser'
-import type { WebSocketProxy } from './ws'
+import consola from 'consola'
 
 import { sign, verify } from '../jose/sign'
-import { IJoseVerify } from '../jose/types'
 
-import consola from 'consola'
-import { JWTPayload } from 'jose'
+import type { WebSocketProxy } from './ws'
+import type { IJoseVerify } from '../jose/types'
+import type Buffer from 'node:buffer'
 
 type BufferLike =
   | string
@@ -47,12 +46,11 @@ async function customOn(
   event: string,
   listener: (...args: any[]) => void,
 ) {
-  
   return this.on(event, customListener)
 
   async function customListener(this: WebSocketProxy, ...args: any[]) {
     if (event === 'message') {
-      let [data, isBinary] = args as | [BufferLike, boolean]
+      const [data, isBinary] = args as | [BufferLike, boolean]
 
       if (!this.jose) {
         logger.debug('Receiving: jose not initialized', data)
@@ -60,13 +58,14 @@ async function customOn(
         return listener.call(this, data, isBinary)
       }
 
-      const { payload, ...jws } = await verify(data.toString(), this.jose.jwks)
+      const { payload, ..._jws } = await verify(data.toString(), this.jose.jwks)
 
       logger.debug('Receiving payload"', { payload })
 
       return listener.call(
         this,
-        JSON.stringify({ ...jws, ...(payload as object) }),
+        // JSON.stringify({ ...jws, ...(payload as object) }),
+        JSON.stringify(payload),
         isBinary,
       )
     }

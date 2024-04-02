@@ -1,10 +1,12 @@
 import consola from 'consola'
-import { IJoseVerify } from '../jose/types'
 
 import { sign, verify } from '../jose/sign'
 
+import type { IJoseVerify } from '../jose/types'
+
 export * from './types'
 
+const logger = consola.withTag('ws/browser')
 export class WebSocketBrowserProxy extends WebSocket {
   jose?: IJoseVerify
   public constructor(
@@ -15,11 +17,11 @@ export class WebSocketBrowserProxy extends WebSocket {
     super(address, protocols)
     this.jose = jose
 
-    // return wrapSocket(this)
+    return wrapSocket(this)
   }
 }
 
-export function wrapSocket<T>(ws: WebSocketBrowserProxy) {
+export function wrapSocket(ws: WebSocketBrowserProxy) {
   return new Proxy(ws, {
     get: (target, prop) => {
       logger.info('Getting', prop, target)
@@ -37,8 +39,6 @@ export function wrapSocket<T>(ws: WebSocketBrowserProxy) {
 
 type BufferLike = string | ArrayBufferView | ArrayBufferLike | Blob
 
-const logger = consola.withTag('ws/browser')
-
 async function customOn(
   this: WebSocketBrowserProxy,
   event: string,
@@ -48,8 +48,8 @@ async function customOn(
 
   async function customListener(this: WebSocketBrowserProxy, ...args: any[]) {
     if (event === 'message') {
-      let [event] = args as [MessageEvent<string>]
-      let data = event.data
+      const [event] = args as [MessageEvent<string>]
+      const data = event.data
 
       if (!this.jose) {
         logger.info('Receiving: jose not initialized', data)
@@ -57,7 +57,7 @@ async function customOn(
         return listener.call(this, event)
       }
 
-      const { payload, ...jws } = await verify(data.toString(), this.jose.jwks)
+      const { payload, ..._jws } = await verify(data.toString(), this.jose.jwks)
 
       const newEvent = createMessageEvent(event, payload)
 
