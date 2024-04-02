@@ -17,13 +17,10 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/esm/index.mjs",
-      "require": "./dist/cjs/index.cjs"
+      "types": "./dist/index.d.ts"
     }
   },
-  "main": "./dist/cjs/index.cjs",
-  "module": "./dist/esm/index.mjs",
+  "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "typesVersions": {
     "*": {
@@ -34,11 +31,12 @@
     }
   },
   "files": [
-    "dist"
+    "dist/*.ts"
   ],
   "scripts": {
-    "build": "cross-env NODE_OPTIONS=\"--no-warnings\" yarn rollup --configPlugin esbuild --config rollup.config.ts",
-    "start": "cross-env NODE_OPTIONS=\"--no-warnings --experimental-modules --experimental-import-meta-resolve\" yarn node dist/esm/index.mjs",
+    "build:server": "cross-env NODE_OPTIONS=\"--no-warnings\" yarn rollup --configPlugin esbuild --config rollup.config.ts",
+    "build": "yarn generate:types && yarn build:server",
+    "start": "cross-env NODE_OPTIONS=\"--no-warnings --experimental-modules --experimental-import-meta-resolve\" yarn node dist/index.mjs",
     "schema": "yarn typescript-json-schema --out schema.json --skipLibCheck src/index.ts Options",
     "typecheck": "yarn tsc --noEmit",
     "release": "yarn npm publish",
@@ -89,8 +87,8 @@
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-typescript": "^11.1.6",
     "@sozdev/eslint-config": "^0.0.11",
     "@types/ws": "^8.5.10",
     "concurrently": "^8.2.2",
@@ -98,11 +96,10 @@
     "json-schema-migrate": "^2.0.0",
     "lint-staged": "^15.2.2",
     "quicktype-core": "^23.0.106",
-    "rollup": "^4.13.0",
+    "rollup": "^4.13.2",
     "rollup-plugin-dts": "^6.1.0",
     "rollup-plugin-esbuild": "^6.1.1",
     "simple-git-hooks": "^2.10.0",
-    "tsup": "^8.0.2",
     "typescript": "^5.4.2",
     "typescript-json-schema": "0.63.0"
   },

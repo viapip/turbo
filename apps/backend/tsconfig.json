@@ -41,6 +41,7 @@
     "src/**/*",
     "lib/**/*",
     "scripts/**/*",
+    "client",
     "client"
-, "client"  ]
+  ]
 }

@@ -1,4 +1,2 @@
-export * from '../server/router'
-
-
-export type Test = 123
+export type * from '../server/router'
+export type * from 'types'

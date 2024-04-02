@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 import { publicProcedure, rootRouter } from '../trpc'
 
-import { queueEvents } from '@sozdev/share-libs'
+import { queueEvents } from '@/bullmq/events'
 
 const logger = consola.withTag('server')
 
@@ -20,7 +20,7 @@ export const dataRouter = rootRouter({
     .query(async ({
       input: id,
       ctx: { mongodb },
-    }) => await mongodb.data.findOne(new ObjectId(id)) as {_id: ObjectId}),
+    }) => await mongodb.data.findOne(new ObjectId(id)) as { _id: ObjectId }),
 
   postItem: publicProcedure
     .input(z.object({
@@ -42,7 +42,7 @@ export const dataRouter = rootRouter({
       logger.info(`Job ${job.id} added:`, JSON.stringify(data, null, 2))
       const returnvalue = await job.waitUntilFinished(queueEvents)
       logger.success(`Job ${job.id} result:`, returnvalue)
-        logger.info('Job', data)
+      logger.info('Job', data)
       const { insertedId } = await mongodb
         .data
         .insertOne(data as OptionalId<Document>)

@@ -1,21 +1,29 @@
 {
   "name": "with-vue-nuxt",
+  "type": "module",
   "private": true,
+  "packageManager": "yarn@4.1.1",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "lint:staged": "lint-staged"
   },
   "devDependencies": {
+    "@sozdev/eslint-config": "^0.0.11",
     "eslint": "^8.57.0",
+    "lint-staged": "^15.2.0",
     "prettier": "^3.2.5",
     "tsconfig": "*",
-    "turbo": "latest"
+    "turbo": "latest",
+    "typescript": "^5.4.2"
   },
-  "packageManager": "yarn@4.1.1",
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "simple-git-hooks": {
+    "pre-commit": "yarn run lint:staged"
+  }
 }

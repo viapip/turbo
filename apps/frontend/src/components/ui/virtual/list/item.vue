@@ -1,79 +1,50 @@
-<script setup lang="ts">
-import type { ComputedRef, PropType } from 'vue'
+<script setup lang="ts" generic="T extends { _id: string }">
+import { nanoid } from 'nanoid'
 
-const props = defineProps({
-  index: {
-    type: Number,
-    required: true,
-  },
-  tag: {
-    type: String,
-    default: 'div',
-  },
-  horizontal: {
-    type: Boolean,
-    default: false,
-  },
-  slotComponent: {
-    type: Function,
-  },
-  estimateSize: {
-    type: Number,
-    default: 100,
-  },
+import type { ComputedRef } from 'vue'
 
-  dataId: {
-    type: String,
-    required: true,
-  },
-  dataKey: {
-    type: String,
-    default: '',
-  },
-  dataGetter: {
-    type: Function as PropType<
-      <T extends Record<string, any>>(
-        id: string
-      ) => Promise<ComputedRef<T> | undefined>
-    >,
-    required: true,
-  },
-  dataComponent: {
-    type: [Object, Function],
-    required: false,
-  },
-
-  extraProps: {
-    type: Object as PropType<Record<string, any>>,
-  },
-  scopedSlots: {
-    type: Object,
-  },
-  itemClass: {
-    type: String,
-  },
+const props = withDefaults(defineProps<{
+  index: number
+  tag: string
+  horizontal: boolean
+  slotComponent?: Component
+  estimateSize: number
+  dataId: string
+  dataKey: string
+  dataGetter: (id: string) => Promise<ComputedRef<T | undefined> | ComputedRef<T | undefined>[]>
+  dataComponent?: Component<{ item: T | T[], index: number }>
+  extraProps?: Record<string, any>
+  scopedSlots: any
+  itemClass: string
+}>(), {
+  tag: 'div',
+  horizontal: false,
+  estimateSize: 100,
+  dataKey: nanoid(),
 })
 
 const emit = defineEmits<{
-  (event: 'resize', id: string, size: number, init: boolean): void
-  (event: 'action', data: { id: string; [key: string]: any }): void
+  resize: [id: string, size: number, init: boolean]
 }>()
 
 const index = toRef(props, 'index')
 const dataId = toRef(props, 'dataId')
 
-const item = await props.dataGetter(dataId.value)
+// const test = asyncComputed(() => props.dataGetter(dataId.value))
+const item: Ref<ComputedRef<T | undefined> | ComputedRef<T | undefined>[] | null> = ref(null)
+watch(dataId, async () => {
+  item.value = await props.dataGetter(dataId.value)
+}, { immediate: true })
 
 const rootRef = ref<HTMLElement | null>(null)
 const horizontal = toRef(props, 'horizontal')
 const shapeKey = computed<'width' | 'height'>(() =>
-  horizontal.value ? 'width' : 'height'
+  horizontal.value ? 'width' : 'height',
 )
 
 const resizeObserver = useResizeObserver(rootRef, (entries) => {
-  if (entries.length > 0) {
+  if (entries.length > 0)
     emit('resize', dataId.value, entries[0].contentRect[shapeKey.value], false)
-  }
 })
 
 onMounted(dispatchSizeChange)
@@ -85,9 +56,8 @@ onUnmounted(resizeObserver.stop)
 function dispatchSizeChange() {
   if (rootRef.value) {
     const entries = rootRef.value.getClientRects()
-    if (entries.length > 0) {
+    if (entries.length > 0)
       emit('resize', dataId.value, entries[0][shapeKey.value], true)
-    }
   }
 }
 </script>
@@ -104,21 +74,19 @@ function dispatchSizeChange() {
         v-bind="{
           scopedSlots: props.scopedSlots,
           extraProps: props.extraProps,
-          dataKey: props.dataKey,
           index,
           item,
         }"
         :is="props.dataComponent"
         v-if="props.dataComponent"
         :key="`${props.dataKey}-listitem_component-${dataId}-${index}`"
-        :class="props.itemClass"
-        @action="(e:any) => emit('action', {id:dataId,...e})"
+        :class="props.itemClass || ''"
       />
       <Component
         :is="props.slotComponent"
         v-else-if="props.slotComponent"
         :key="`${props.dataKey}-listitem_slotcomponent-${dataId}-${index}`"
-        :class="props.itemClass"
+        :class="props.itemClass || ''"
       />
     </Component>
     <Component

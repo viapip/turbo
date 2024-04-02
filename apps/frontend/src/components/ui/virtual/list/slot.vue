@@ -23,7 +23,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (event: 'resize', id: string, size: number, init: boolean): void
+  resize: [id: string, size: number, init: boolean]
 }>()
 
 const slots = useSlots()
@@ -33,7 +33,7 @@ const rootRef = ref<HTMLElement | null>(null)
 const dataId = toRef(props, 'dataId')
 const horizontal = toRef(props, 'horizontal')
 const shapeKey = computed<'width' | 'height'>(() =>
-  horizontal.value ? 'width' : 'height'
+  horizontal.value ? 'width' : 'height',
 )
 
 const resizeObserver = useResizeObserver(rootRef, (entries) => {

@@ -1,4 +1,3 @@
-import consola from 'consola'
 import { resolve } from 'pathe'
 import * as colors from 'tailwindcss/colors'
 
@@ -20,7 +19,9 @@ const componentsDir = resolve(srcDir, 'components')
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
-
+  alias: {
+    '~': srcDir,
+  },
   srcDir,
   appDir,
 
@@ -70,8 +71,6 @@ export default defineNuxtConfig({
     // }],
   },
 
-  plugins: [],
-
   components: {
     dirs: [
       {
@@ -90,11 +89,6 @@ export default defineNuxtConfig({
       },
     ],
   },
-
-  css: [
-    // '~/assets/fonts/inter/inter.css',
-    // '~/assets/fonts/montserrat/montserrat.css',
-  ],
 
   tailwindcss: {
     configPath: resolve('./tailwind.config.ts'),
@@ -135,6 +129,7 @@ export default defineNuxtConfig({
 
   typescript: {
     shim: false,
+
   },
 
   nitro: {
@@ -154,21 +149,6 @@ export default defineNuxtConfig({
     // debug: true,
     // timing: true,
   },
-
-  // utils: {
-  //   imports: [
-  //     {
-  //       from: '@antfu/utils',
-  //       prefixSkip: 'is',
-  //       prefix: 'fu',
-  //     },
-  //     {
-  //       from: 'radash',
-  //       prefixSkip: 'is',
-  //       prefix: 'ra',
-  //     },
-  //   ],
-  // },
 
   i18n: {
     locales,
@@ -209,6 +189,5 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@nuxtjs/robots',
     'nuxt-typed-router',
-
   ],
 })

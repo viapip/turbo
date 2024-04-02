@@ -10,10 +10,7 @@
     "dev": {
       "cache": false,
       "persistent": true,
-        "dependsOn": [
-          "@sozdev/share-libs#build",
-          "@sozdev/backend#build"
-        ]
+      "dependsOn": ["@sozdev/share-libs#build", "@sozdev/backend#build"]
     }
   }
 }

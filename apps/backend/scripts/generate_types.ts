@@ -1,11 +1,10 @@
 import { readFile, writeFile } from 'node:fs/promises'
 import { basename } from 'node:path'
 
+import { quicktypeMultipleJSONSchema } from '@sozdev/share-libs'
 import consola from 'consola'
 import glob from 'fast-glob'
 import { TypeScriptTargetLanguage } from 'quicktype-core'
-
-import { quicktypeMultipleJSONSchema } from '@/quicktype'
 
 import type { JSONSchemaSourceData } from 'quicktype-core'
 
