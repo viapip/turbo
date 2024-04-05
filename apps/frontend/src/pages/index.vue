@@ -10,5 +10,7 @@ const { $trpc } = useNuxtApp()
     </div>
 
     <Auth />
+
+    <Editor />
   </div>
 </template>

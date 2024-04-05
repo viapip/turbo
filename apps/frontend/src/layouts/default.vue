@@ -3,7 +3,7 @@ const { setLocale, locale } = useI18n()
 </script>
 
 <template>
-  <div class="flex flex-col w-full h-screen bg-primary-50">
+  <div class="flex flex-col w-full bg-primary-50">
     <div class="flex flex-col justify-start flex-grow w-full justify-items-start">
       <div class="fixed top-0 bottom-0 left-0 right-0 overflow-visible pointer-events-none winbox-layer">
         <div id="teleport-layer--10" class="relative z-10 pointer-events-auto" />

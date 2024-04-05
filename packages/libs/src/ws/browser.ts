@@ -24,7 +24,7 @@ export class WebSocketBrowserProxy extends WebSocket {
 export function wrapSocket(ws: WebSocketBrowserProxy) {
   return new Proxy(ws, {
     get: (target, prop) => {
-      logger.info('Getting', prop, target)
+      logger.debug('Getting', prop, target)
       switch (prop) {
         case 'addEventListener':
           return customOn.bind(target)
@@ -52,7 +52,7 @@ async function customOn(
       const data = event.data
 
       if (!this.jose) {
-        logger.info('Receiving: jose not initialized', data)
+        logger.debug('Receiving: jose not initialized', data)
 
         return listener.call(this, event)
       }
@@ -61,12 +61,12 @@ async function customOn(
 
       const newEvent = createMessageEvent(event, payload)
 
-      logger.info('Receiving payload"', { payload, event: newEvent })
+      logger.debug('Receiving payload"', { payload, event: newEvent })
 
       return listener.call(this, newEvent)
     }
 
-    logger.info('Receiving', event, args)
+    logger.debug('Receiving', event, args)
 
     return listener.call(this, ...args)
   }
@@ -84,18 +84,18 @@ function createMessageEvent(event: MessageEvent, payload: unknown) {
 
 async function customSend(this: WebSocketBrowserProxy, data: BufferLike) {
   if (!this.jose) {
-    logger.info('Sending: jose not initialized', data)
+    logger.debug('Sending: jose not initialized', data)
     this.send(data)
     return
   }
 
-  logger.info('Signing payload: ', { payload: data, jose: this.jose })
+  logger.debug('Signing payload: ', { payload: data, jose: this.jose })
 
   const jws = await sign(this.jose.key, {
     payload: JSON.parse(data.toString()),
   })
 
-  logger.info('Sending', jws)
+  logger.debug('Sending', jws)
 
   this.send(jws)
 }

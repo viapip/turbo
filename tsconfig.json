@@ -8,7 +8,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "inlineSources": false,
-    "esModuleInterop": true,
+    // "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "preserveWatchOutput": true,

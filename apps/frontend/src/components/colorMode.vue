@@ -12,11 +12,12 @@ const isDark = computed({
     <UButton
       v-bind="$attrs"
       :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
+      :style="{}"
       @click="isDark = !isDark"
     />
 
     <template #fallback>
-      <div v-bind="$attrs" />
+      <div v-bind="$attrs" :style="{}" />
     </template>
   </ClientOnly>
 </template>

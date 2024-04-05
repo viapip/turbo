@@ -83,6 +83,13 @@ export default defineNuxtConfig({
         path: resolve(componentsDir, 'winbox'),
       },
       {
+        global: true,
+        enabled: true,
+        pathPrefix: true,
+        prefix: 'editor',
+        path: resolve(componentsDir, 'editor'),
+      },
+      {
         enabled: true,
         pathPrefix: true,
         path: componentsDir,
