@@ -18,5 +18,10 @@ function _onFocus(_event: FocusEvent) {
 </script>
 
 <template>
-  <div>objectField</div>
+  <div>
+    <div>Array</div>
+    <div>
+      {{ props.item }}
+    </div>
+  </div>
 </template>

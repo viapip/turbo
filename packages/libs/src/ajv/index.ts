@@ -5,13 +5,11 @@ import ajvFormats from 'ajv-formats'
 import ajvI18n from 'ajv-i18n'
 import ajvKeywords from 'ajv-keywords'
 import consola from 'consola'
-// import glob from 'fast-glob'
-import {userSchema } from './schema'
-import { readFile } from 'node:fs/promises'
-import { basename } from 'node:path'
-
-import type { AnySchemaObject, Options } from 'ajv'
 import defu from 'defu'
+
+import { userSchema } from './schema'
+
+import type { Options } from 'ajv'
 
 const logger = consola.withTag('ajv')
 const defaultOptions: Options = {
@@ -45,8 +43,7 @@ const defaultOptions: Options = {
   //   return schema
   // },
 }
-export async function createAjv(options: Options ) {
-  
+export async function createAjv(options: Options) {
   const ajv = new Ajv(defu(defaultOptions, options))
 
   ajvKeywords(ajv)

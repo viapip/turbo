@@ -94,32 +94,32 @@ export type GeoJSONLineString = {
 
 export type TentacledType = "LineString";
 
-export type GeoJSONMultiLineString = {
+export type GeoJSONMultiPoint = {
     bbox?:       number[];
-    coordinates: Array<Array<number[]>>;
+    coordinates: Array<number[]>;
     type:        StickyType;
     [property: string]: any;
 }
 
-export type StickyType = "MultiLineString";
+export type StickyType = "MultiPoint";
 
-export type GeoJSONMultiPolygon = {
+export type GeoJSONMultiLineString = {
     bbox?:       number[];
-    coordinates: Array<Array<Array<number[]>>>;
+    coordinates: Array<Array<number[]>>;
     type:        IndigoType;
     [property: string]: any;
 }
 
-export type IndigoType = "MultiPolygon";
+export type IndigoType = "MultiLineString";
 
-export type GeoJSONMultiPoint = {
+export type GeoJSONMultiPolygon = {
     bbox?:       number[];
-    coordinates: Array<number[]>;
+    coordinates: Array<Array<Array<number[]>>>;
     type:        IndecentType;
     [property: string]: any;
 }
 
-export type IndecentType = "MultiPoint";
+export type IndecentType = "MultiPolygon";
 
 export type GeoJSONPoint = {
     bbox?:       number[];

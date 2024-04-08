@@ -18,19 +18,17 @@ const defaultMapFields: Record<JSONSchema7TypeName, string> = {
 } as const
 
 const withSpecialChilds = ['properties', 'definitions', 'required']
-interface DataField {
-  type: keyof typeof defaultMapFields
-  required?: boolean
-}
+
 const computedMap = computed(() => {
-  const map = new Map<string, DataField>()
+  const map = new Map<string, Omit<JSONSchema7, 'type'> & { type: JSONSchema7TypeName }>()
   traverse(props.schema, (
-    s: { type: keyof typeof defaultMapFields },
+    s: { type: JSONSchema7TypeName },
     key?: string,
   ) => {
     if (key && !withSpecialChilds.includes(key))
-      map.set(key, { ...s })
-      // const isRequired = !!props.schema.required?.includes(key)
+      map.set(key, { $id: key, ...s })
+    if (s.type === 'array')
+      return undefined
   })
 
   return map
@@ -50,7 +48,7 @@ provide('schema', props.schema)
         <component
           :is="resolveComponent(defaultMapFields[value.type])"
           :schema="props.schema"
-          :schema-type="value"
+          :item="value"
         />
       </div>
     </div>

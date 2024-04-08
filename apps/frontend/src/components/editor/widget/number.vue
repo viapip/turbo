@@ -9,6 +9,12 @@
 //   disabled?: boolean
 // }
 
+import type { JSONSchema7 } from 'json-schema'
+
+const props = defineProps<{
+  item: JSONSchema7
+}>()
+
 // const props = defineProps()
 const emits = defineEmits(['change', 'blur', 'focus'])
 
@@ -25,7 +31,7 @@ function _onFocus(_event: FocusEvent) {
 
 <template>
   <div>
-    <div>numberWidget</div>
+    <div>{{ props.item.description || props.item.$id }}: </div>
     <EditorTemplatesBaseInput type="number" />
     <!-- <div>{{ props.schemaType.type }}</div> -->
   </div>

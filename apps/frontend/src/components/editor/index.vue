@@ -7,22 +7,34 @@ const schema: JSONSchema7 = {
   properties: {
     status: {
       type: 'string',
+      description: 'Статус',
     },
     date: {
       type: 'string',
       format: 'date-time',
+      description: 'Дата',
     },
     option: {
       type: 'number',
+      description: 'Доп опция',
     },
+    // test: {
+    //   type: 'array',
+    //   minItems: 2,
+    //   items: {
+    //     type: ['string', 'number'],
+    //   },
+    // },
     info: {
       type: 'object',
       properties: {
         email: {
           type: 'string',
+          description: 'Почта',
           format: 'email',
         },
         age: {
+          description: 'Возраст',
           type: 'number',
         },
       },
@@ -31,12 +43,6 @@ const schema: JSONSchema7 = {
   required: ['status'],
   additionalProperties: false,
 }
-
-// const parser = schemaParser(schema)
-
-// const retrieve = retrieveSchema(validator, schema)
-
-// console.log('schema', { parser, retrieve })
 </script>
 
 <template>

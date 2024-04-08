@@ -57,17 +57,26 @@ async function customOn(
 
         return listener.call(this, data, isBinary)
       }
+      try {
+        const { payload, ..._jws } = await verify(data.toString(), this.jose.jwks)
 
-      const { payload, ..._jws } = await verify(data.toString(), this.jose.jwks)
+        logger.debug('Receiving payload"', { payload })
 
-      logger.debug('Receiving payload"', { payload })
-
-      return listener.call(
-        this,
-        // JSON.stringify({ ...jws, ...(payload as object) }),
-        JSON.stringify(payload),
-        isBinary,
-      )
+        return listener.call(
+          this,
+          // JSON.stringify({ ...jws, ...(payload as object) }),
+          JSON.stringify(payload),
+          isBinary,
+        )
+      }
+      catch (e) {
+        return listener.call(
+          this,
+          // JSON.stringify({ ...jws, ...(payload as object) }),
+          JSON.stringify({}),
+          isBinary,
+        )
+      }
     }
 
     logger.debug('Receiving', event, args)

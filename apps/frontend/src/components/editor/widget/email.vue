@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // import { defineProps } from 'vue'
 
-// import type { JSONSchema7 } from 'json-schema'
+import type { JSONSchema7 } from 'json-schema'
 
 // interface FieldProps {
 //   name: string
@@ -9,7 +9,10 @@
 //   disabled?: boolean
 // }
 
-// const props = defineProps()
+const props = defineProps<{
+  item: JSONSchema7
+}>()
+
 const emits = defineEmits(['change', 'blur', 'focus'])
 
 // Events
@@ -25,7 +28,7 @@ function _onFocus(_event: FocusEvent) {
 
 <template>
   <div>
-    <div>textWidget</div>
+    <div>{{ props.item.description || props.item.$id }}:</div>
     <EditorTemplatesBaseInput type="email" />
     <!-- <div>{{ props.schemaType.type }}</div> -->
   </div>

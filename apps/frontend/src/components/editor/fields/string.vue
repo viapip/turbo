@@ -5,7 +5,7 @@ import { getWidget } from '~/utils/editor/constants'
 
 import type { JSONSchema7 } from 'json-schema'
 
-const props = defineProps<{ schemaType: JSONSchema7 }>()
+const props = defineProps<{ item: JSONSchema7 }>()
 const emits = defineEmits(['change', 'blur', 'focus'])
 
 const _schema = inject<JSONSchema7>('schema')
@@ -20,14 +20,14 @@ function _onBlur(id: string, value: string) {
 function _onFocus(_event: FocusEvent) {
 }
 const widget = getWidget(
-  props.schemaType?.type as string || 'string',
-  props.schemaType.format,
+  props.item?.type as string || 'string',
+  props.item.format,
 )
 </script>
 
 <template>
   <div>
-    <div>{{ props.schemaType }}</div>
-    <component :is="resolveComponent(widget)" />
+    <div>{{ props.item }}</div>
+    <component :is="resolveComponent(widget)" :item="props.item" />
   </div>
 </template>

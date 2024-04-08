@@ -56,14 +56,19 @@ async function customOn(
 
         return listener.call(this, event)
       }
+      try {
+        const { payload, ..._jws } = await verify(data.toString(), this.jose.jwks)
 
-      const { payload, ..._jws } = await verify(data.toString(), this.jose.jwks)
+        const newEvent = createMessageEvent(event, payload)
 
-      const newEvent = createMessageEvent(event, payload)
+        logger.debug('Receiving payload"', { payload, event: newEvent })
 
-      logger.debug('Receiving payload"', { payload, event: newEvent })
-
-      return listener.call(this, newEvent)
+        return listener.call(this, newEvent)
+      }
+      catch (error) {
+        const newEvent = createMessageEvent(event, {})
+        return listener.call(this, newEvent)
+      }
     }
 
     logger.debug('Receiving', event, args)

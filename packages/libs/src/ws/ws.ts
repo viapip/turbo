@@ -1,8 +1,9 @@
-import {WebSocket as WebSocketNode} from 'ws'
-import type { ClientOptions } from 'ws'
-import { IJoseVerify } from '../jose/types'
+import { WebSocket as WebSocketNode } from 'ws'
+
 import { wrapSocket } from './wrapper'
 
+import type { IJoseVerify } from '../jose/types'
+import type { ClientOptions } from 'ws'
 
 export class WebSocketProxy extends WebSocketNode {
   public jose?: IJoseVerify
@@ -16,4 +17,3 @@ export class WebSocketProxy extends WebSocketNode {
     return wrapSocket(this, jose)
   }
 }
-
