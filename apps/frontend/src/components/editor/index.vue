@@ -18,13 +18,13 @@ const schema: JSONSchema7 = {
       type: 'number',
       description: 'Доп опция',
     },
-    // test: {
-    //   type: 'array',
-    //   minItems: 2,
-    //   items: {
-    //     type: ['string', 'number'],
-    //   },
-    // },
+    test: {
+      type: 'array',
+      minItems: 2,
+      items: {
+        type: ['string', 'number'],
+      },
+    },
     info: {
       type: 'object',
       properties: {

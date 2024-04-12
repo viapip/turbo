@@ -173,6 +173,9 @@ export function traverse<T, F extends (sub: any, key?: string) => any>(
     if (res !== undefined)
       return res === sSkip ? undefined : res
 
+    if ('type' in sub && key && (sub.type === 'object' || sub.type === 'array'))
+      return
+
     for (const k of objectKeys(sub)) {
       if (!specialChilds && !Array.isArray(sub) && !knownKeywords.includes(k))
         continue

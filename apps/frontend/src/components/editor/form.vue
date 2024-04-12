@@ -1,38 +1,24 @@
 <script setup lang="ts">
 import { resolveComponent } from 'vue'
 
-import type { JSONSchema7, JSONSchema7TypeName } from 'json-schema'
+import { getMapSchema, mapFields } from '~/utils/editor/constants'
+
+import type { JSONSchema7 } from 'json-schema'
 
 const props = withDefaults(defineProps<{
   schema: JSONSchema7
 }>(), {})
 
-const defaultMapFields: Record<JSONSchema7TypeName, string> = {
-  string: 'EditorFieldsString',
-  number: 'EditorFieldsNumber',
-  integer: 'EditorFieldsNumber',
-  boolean: 'EditorFieldsBoolean',
-  object: 'EditorFieldsObject',
-  array: 'EditorFieldsArray',
-  null: 'EditorFieldsNull',
-} as const
+const mapRef = getMapSchema(props.schema)
 
-const withSpecialChilds = ['properties', 'definitions', 'required']
-
-const computedMap = computed(() => {
-  const map = new Map<string, Omit<JSONSchema7, 'type'> & { type: JSONSchema7TypeName }>()
-  traverse(props.schema, (
-    s: { type: JSONSchema7TypeName },
-    key?: string,
-  ) => {
-    if (key && !withSpecialChilds.includes(key))
-      map.set(key, { $id: key, ...s })
-    if (s.type === 'array')
-      return undefined
-  })
-
-  return map
-})
+// const mapRef = ref(new Map<string, Omit<JSONSchema7, 'type'> & { type: JSONSchema7TypeName }>())
+// traverse(props.schema, (
+//   s,
+//   key,
+// ) => {
+//   if (key && !withSpecialChilds.includes(key))
+//     mapRef.value.set(key, { $id: key, ...s })
+// })
 
 provide('schema', props.schema)
 </script>
@@ -40,13 +26,13 @@ provide('schema', props.schema)
 <template>
   <div>
     <div class="border py-8">
-      {{ computedMap }}
+      {{ mapRef }}
     </div>
 
     <div>
-      <div v-for="[key, value] of computedMap.entries()" :key="key">
+      <div v-for="[key, value] of mapRef.entries()" :key="key">
         <component
-          :is="resolveComponent(defaultMapFields[value.type])"
+          :is="resolveComponent(mapFields[value.type])"
           :schema="props.schema"
           :item="value"
         />
