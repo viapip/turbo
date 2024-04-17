@@ -1,5 +1,6 @@
 import { resolve } from 'pathe'
 import * as colors from 'tailwindcss/colors'
+import wasm from 'vite-plugin-wasm'
 
 import { defaultLocale, locales } from './src/i18n'
 
@@ -33,7 +34,7 @@ export default defineNuxtConfig({
       strategy: 'merge',
     },
   },
-
+  vite: { plugins: [wasm()] },
   runtimeConfig: {
     apiUri: 'http://localhost:8080',
     // apiUri: 'http://regioni.local/api',
@@ -156,6 +157,7 @@ export default defineNuxtConfig({
     // debug: true,
     // timing: true,
   },
+  // plugins: [wasm()],
 
   i18n: {
     locales,

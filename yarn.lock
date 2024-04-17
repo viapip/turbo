@@ -121,6 +121,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@automerge/automerge-wasm@npm:0.13.0":
+  version: 0.13.0
+  resolution: "@automerge/automerge-wasm@npm:0.13.0"
+  checksum: 10/ef00c9b00c5a5ce1d4f94a20843f60d54f9e4165a16753c853732b3dadddbc8391b0d2857359d831d41cbc7c686aa35c96acd4dd6e5431ab27620c8fb76abbcd
+  languageName: node
+  linkType: hard
+
+"@automerge/automerge-wasm@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "@automerge/automerge-wasm@npm:0.14.0"
+  checksum: 10/8333ea2b62c48a9744b444f7f7b5a92961ad51113cddcdfad20b5cb514de85b8f4713081d2b849efdaf544da99693f1b5ba95746d98cfe2ff9f78d1baba1d118
+  languageName: node
+  linkType: hard
+
+"@automerge/automerge@npm:^2.2.0-rc1":
+  version: 2.2.0-rc1
+  resolution: "@automerge/automerge@npm:2.2.0-rc1"
+  dependencies:
+    "@automerge/automerge-wasm": "npm:0.13.0"
+    uuid: "npm:^9.0.0"
+  checksum: 10/7de5f8b857996138ef5f8366b417eabaccc1b6d86bddcc1a031de62a65b50811a3399fb4ccab22a744d0994334729d31eb0892504a49cb5b49b878fbb6c6e9e0
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.22.13, @babel/code-frame@npm:^7.23.5, @babel/code-frame@npm:^7.24.1, @babel/code-frame@npm:^7.24.2":
   version: 7.24.2
   resolution: "@babel/code-frame@npm:7.24.2"
@@ -3964,6 +3988,7 @@ __metadata:
     json-schema-migrate: "npm:^2.0.0"
     lint-staged: "npm:^15.2.2"
     listhen: "npm:^1.7.2"
+    microdiff: "npm:^1.4.0"
     mongodb: "npm:^6.5.0"
     nanoid: "npm:^5.0.6"
     quicktype-core: "npm:^23.0.106"
@@ -3979,6 +4004,7 @@ __metadata:
     typescript: "npm:^5.4.2"
     typescript-json-schema: "npm:0.63.0"
     ws: "npm:^8.16.0"
+    yjs: "npm:^13.6.14"
     zod: "npm:^3.22.4"
   languageName: unknown
   linkType: soft
@@ -3997,6 +4023,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sozdev/nuxt-frontend@workspace:apps/frontend"
   dependencies:
+    "@automerge/automerge": "npm:^2.2.0-rc1"
+    "@automerge/automerge-wasm": "npm:^0.14.0"
     "@exodus/schemasafe": "npm:^1.3.0"
     "@iconify/json": "npm:^2.2.168"
     "@intlify/core-base": "npm:^9.9.0"
@@ -4035,6 +4063,7 @@ __metadata:
     jose: "npm:^5.2.3"
     json-schema-merge-allof: "npm:^0.8.1"
     jwt-decode: "npm:^4.0.0"
+    microdiff: "npm:^1.4.0"
     mqtt: "npm:^5.3.5"
     nanoid: "npm:^5.0.4"
     nuxt: "npm:^3.11.1"
@@ -4042,6 +4071,7 @@ __metadata:
     pathe: "npm:^1.1.2"
     postcss: "npm:^8.4.33"
     postcss-html: "npm:^1.6.0"
+    radash: "npm:^12.1.0"
     simple-git-hooks: "npm:^2.9.0"
     simplebar-core: "npm:^1.2.4"
     stylelint: "npm:^16.1.0"
@@ -4054,6 +4084,7 @@ __metadata:
     superjson: "npm:^2.2.1"
     tailwindcss: "npm:^3.4.1"
     typescript: "npm:^5.3.3"
+    vite-plugin-wasm: "npm:^3.3.0"
     vue-i18n-routing: "npm:^1.2.0"
     vue-tsc: "npm:^1.8.27"
     workbox-build: "npm:^7.0.0"
@@ -4061,6 +4092,7 @@ __metadata:
     workbox-routing: "npm:^7.0.0"
     workbox-strategies: "npm:^7.0.0"
     ws: "npm:^8.16.0"
+    yjs: "npm:^13.6.14"
     zod: "npm:^3.22.4"
   peerDependencies:
     h3: "*"
@@ -4094,6 +4126,7 @@ __metadata:
   dependencies:
     "@antfu/utils": "npm:^0.7.7"
     "@apidevtools/json-schema-ref-parser": "npm:^11.5.4"
+    "@automerge/automerge": "npm:^2.2.0-rc1"
     "@exodus/schemasafe": "npm:^1.3.0"
     "@msgpack/msgpack": "npm:^3.0.0-beta2"
     "@rollup/plugin-commonjs": "npm:^25.0.7"
@@ -11270,6 +11303,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"isomorphic.js@npm:^0.2.4":
+  version: 0.2.5
+  resolution: "isomorphic.js@npm:0.2.5"
+  checksum: 10/d8d1b083f05f3c337a06628b982ac3ce6db953bbef14a9de8ad49131250c3592f864b73c12030fdc9ef138ce97b76ef55c7d96a849561ac215b1b4b9d301c8e9
+  languageName: node
+  linkType: hard
+
 "jackspeak@npm:^2.3.5":
   version: 2.3.6
   resolution: "jackspeak@npm:2.3.6"
@@ -11794,6 +11834,19 @@ __metadata:
     prelude-ls: "npm:^1.2.1"
     type-check: "npm:~0.4.0"
   checksum: 10/2e4720ff79f21ae08d42374b0a5c2f664c5be8b6c8f565bb4e1315c96ed3a8acaa9de788ffed82d7f2378cf36958573de07ef92336cb5255ed74d08b8318c9ee
+  languageName: node
+  linkType: hard
+
+"lib0@npm:^0.2.86":
+  version: 0.2.93
+  resolution: "lib0@npm:0.2.93"
+  dependencies:
+    isomorphic.js: "npm:^0.2.4"
+  bin:
+    0ecdsa-generate-keypair: bin/0ecdsa-generate-keypair.js
+    0gentesthtml: bin/gentesthtml.js
+    0serve: bin/0serve.js
+  checksum: 10/398cb378c7819d5425e728ae594f274d4396c3ec25f49fd5213c41b07fdad2aa8fd0a8523568f0eb4653ce1b655677b668de872240f566213c35fc00f28e46e7
   languageName: node
   linkType: hard
 
@@ -12524,6 +12577,13 @@ __metadata:
   version: 1.1.2
   resolution: "methods@npm:1.1.2"
   checksum: 10/a385dd974faa34b5dd021b2bbf78c722881bf6f003bfe6d391d7da3ea1ed625d1ff10ddd13c57531f628b3e785be38d3eed10ad03cebd90b76932413df9a1820
+  languageName: node
+  linkType: hard
+
+"microdiff@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "microdiff@npm:1.4.0"
+  checksum: 10/4cae2ec4d0540b65656837a7c47a17d6428a1be2909d268a579921183c9c21a86e0dfa0c8ade8c60f9127887783a17d54ce7be16d5556708a0e58312bca8803d
   languageName: node
   linkType: hard
 
@@ -19481,6 +19541,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"vite-plugin-wasm@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "vite-plugin-wasm@npm:3.3.0"
+  peerDependencies:
+    vite: ^2 || ^3 || ^4 || ^5
+  checksum: 10/1bcfb50f03280f1966247a4bf9e6ab3a4a76a26fa58fd178708cb3758629cffea544a13c87d0982de0a95a4b41bfc2ad46ae51d3b22080eec965ebfaa17e0454
+  languageName: node
+  linkType: hard
+
 "vite@npm:^5.0.0, vite@npm:^5.1.6":
   version: 5.2.4
   resolution: "vite@npm:5.2.4"
@@ -20348,6 +20417,15 @@ __metadata:
     y18n: "npm:^5.0.5"
     yargs-parser: "npm:^21.1.1"
   checksum: 10/abb3e37678d6e38ea85485ed86ebe0d1e3464c640d7d9069805ea0da12f69d5a32df8e5625e370f9c96dd1c2dc088ab2d0a4dd32af18222ef3c4224a19471576
+  languageName: node
+  linkType: hard
+
+"yjs@npm:^13.6.14":
+  version: 13.6.14
+  resolution: "yjs@npm:13.6.14"
+  dependencies:
+    lib0: "npm:^0.2.86"
+  checksum: 10/aa277393aea2524bf80d014b570a2949a6fe930fb9809dbdb38c04fe6086385f3abba8daf4cce2ddfa421c2f8c450c7beede9972106dece405071e0dc5664a11
   languageName: node
   linkType: hard
 

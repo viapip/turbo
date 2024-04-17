@@ -1,19 +1,18 @@
+import { readFile } from 'node:fs/promises'
 import process from 'node:process'
 
-import { readFile } from 'node:fs/promises'
-
+import { WebSocketProxy, transformer } from '@sozdev/share-libs'
 import {
   createTRPCProxyClient,
   createWSClient,
   wsLink,
 } from '@trpc/client'
 import consola from 'consola'
-
-import { IJoseVerify, KeyPair, transformer } from '@sozdev/share-libs'
-import { WebSocketProxy } from '@sozdev/share-libs'
+import { createLocalJWKSet } from 'jose'
 
 import type { AppRouter } from '~/server/router'
-import { createLocalJWKSet } from 'jose'
+
+import type { IJoseVerify, KeyPair } from '@sozdev/share-libs'
 
 const logger = consola.withTag('client')
 
@@ -31,7 +30,7 @@ const wsClient = createWSClient({
 
 const ws = wsClient.getConnection()
 
-// ws.jose = await getJoseVerify()
+ws.jose = await getJoseVerify()
 // ws.jose = {
 //   jwks,
 //   key: keys1
@@ -43,14 +42,34 @@ const client = createTRPCProxyClient<AppRouter>({
 })
 
 const n = Number.parseInt(process.argv[2], 10) || 1
-const users = await client.data.getAll.query()
-logger.info('Users:', users.length)
-const subscription = client.data.randomNumber.subscribe(n, {
+// const users = await client.data.getAll.query()
+// let doc = A.init<DocType>()
+
+// const resDoc = await client.docs.getItem.query('123')
+// const doc = A.load<DocType>(stringToUint8Array(resDoc))
+// doc = A.merge(doc, docQ)
+
+setInterval(() => {
+  const random = Math.floor(Math.random() * 1000)
+  console.log('random', random)
+
+  // doc = A.change(A.clone(doc), (doc) => {
+  //   doc.name = `hello world 1 - ${random}`
+  // })
+  // console.log('docSetTimeout', doc)
+  const ideas = Array.from(({ length: 10000 })).map(() => ({ text: { text: `idea ${Math.floor(Math.random() * 1000)}`, 8: Math.floor(Math.random() * 1000) } }))
+  client.docs.putItem.mutate({ id: '123', doc: { name: `hello world 1 - ${random}`, ideas } })
+}, 500)
+
+// logger.info('Users:', users.length)
+const subscription = client.docs.onChange.subscribe(undefined, {
   onStarted() {
     logger.info('Subscription started')
   },
-  onData(data) {
-    logger.success('Subscription data', data)
+  onData(value) {
+    // const change = A.applyChanges(doc, [value.lastChange])
+    // doc = change[0]
+    // logger.success('Subscription data', change[0])
   },
   onError(err) {
     logger.error('Subscription error', err)
@@ -76,7 +95,7 @@ while (true) {
 
   if (typeof name !== 'string') {
     logger.info('Invalid name')
-    subscription.unsubscribe()
+    // subscription.unsubscribe()
     break
   }
 
@@ -102,29 +121,27 @@ while (true) {
 
 process.exit(0)
 async function getJoseVerify(): Promise<IJoseVerify> {
-  
   const keys1: KeyPair = JSON.parse(await readFile(
-   'keys/key1.jwk',
-   'utf8',
- ))
+    'keys/key1.jwk',
+    'utf8',
+  ))
   const keys2: KeyPair = JSON.parse(await readFile(
-   'keys/key2.jwk',
-   'utf8',
- ))
- 
- //  const keys1Private = await importJWK(keys1.privateKey)
- //  const keys2Private = await importJWK(keys2.privateKey)
- 
+    'keys/key2.jwk',
+    'utf8',
+  ))
+
+  //  const keys1Private = await importJWK(keys1.privateKey)
+  //  const keys2Private = await importJWK(keys2.privateKey)
+
   const jwks = createLocalJWKSet({
     keys: [
       keys1.publicKey,
       keys2.publicKey,
     ],
   })
- 
- return {
-   jwks: jwks,
-   key: keys1,
- }
- 
- }
+
+  return {
+    jwks,
+    key: keys2,
+  }
+}
