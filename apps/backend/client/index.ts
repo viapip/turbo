@@ -41,7 +41,7 @@ const client = createTRPCProxyClient<AppRouter>({
   transformer,
 })
 
-const n = Number.parseInt(process.argv[2], 10) || 1
+// const n = Number.parseInt(process.argv[2], 10) || 1
 // const users = await client.data.getAll.query()
 // let doc = A.init<DocType>()
 
@@ -51,15 +51,15 @@ const n = Number.parseInt(process.argv[2], 10) || 1
 
 setInterval(() => {
   const random = Math.floor(Math.random() * 1000)
-  console.log('random', random)
+  // console.log('random', random)
 
   // doc = A.change(A.clone(doc), (doc) => {
   //   doc.name = `hello world 1 - ${random}`
   // })
   // console.log('docSetTimeout', doc)
-  const ideas = Array.from(({ length: 10000 })).map(() => ({ text: { text: `idea ${Math.floor(Math.random() * 1000)}`, 8: Math.floor(Math.random() * 1000) } }))
+  const ideas = Array.from(({ length: 10 })).map(() => ({ text: { text: `idea ${Math.floor(Math.random() * 1000)}`, 8: Math.floor(Math.random() * 1000) } }))
   client.docs.putItem.mutate({ id: '123', doc: { name: `hello world 1 - ${random}`, ideas } })
-}, 500)
+}, 5000)
 
 // logger.info('Users:', users.length)
 const subscription = client.docs.onChange.subscribe(undefined, {
@@ -67,6 +67,7 @@ const subscription = client.docs.onChange.subscribe(undefined, {
     logger.info('Subscription started')
   },
   onData(value) {
+    logger.info('Subscription data', value)
     // const change = A.applyChanges(doc, [value.lastChange])
     // doc = change[0]
     // logger.success('Subscription data', change[0])
@@ -114,7 +115,7 @@ while (true) {
 
   const user = await client.data.getItem.query(_id)
   if (user) {
-    users.push(user)
+    // users.push(user)
     logger.info('User', user)
   }
 }

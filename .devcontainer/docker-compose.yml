@@ -38,6 +38,17 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
 
+  # leveldb:
+  #   build: 
+  #     context: .
+  #     dockerfile: leveldb
+  #   volumes:
+  #     - leveldb-data:/opt/app/db
+  #   ports:
+  #     - "4000:4000"  # Assuming your app runs on port 4000 (Change as needed)
+  #   environment:
+  #     LEVELDB_PATH: /data/leveldb
 volumes:
   redis-data:
   mongodb-data:
+  leveldb-data:

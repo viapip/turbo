@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { clone, set } from 'radash'
+import { set } from 'radash'
 
 import type { DocType } from '@sozdev/share-libs/src/browser'
 import type { Difference } from 'microdiff'
@@ -20,7 +20,9 @@ $trpc.docs.onChange.subscribe(undefined, {
     // const decoded = A.decodeChange(value.lastChange)
     // console.log(decoded)
     // console.log(A.getAllChanges(wrap.doc))
-    doc.value = applyDiffs(clone(doc.value), value.diffs)
+    console.log(value)
+    doc.value = value.arg0.currentTarget
+    // doc.value = applyDiffs(clone(doc.value), value.diffs)
     // const heads = A.getHeads(wrap.doc)
     // const before = A.getHeads(wrap.doc)
 
