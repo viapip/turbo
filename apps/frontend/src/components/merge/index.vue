@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { stringToUint8Array } from '@sozdev/share-libs/src/browser'
+import { Loro } from 'loro-crdt'
 import { set } from 'radash'
 
 import type { DocType } from '@sozdev/share-libs/src/browser'
+import type { LoroMap } from 'loro-crdt'
 import type { Difference } from 'microdiff'
 
 const { $trpc } = useNuxtApp()
@@ -11,17 +14,31 @@ const items = ref([
     slot: 'test',
   },
 ])
-const doc = ref<DocType>({ name: '', ideas: [] })
-doc.value = await $trpc.docs.getItem.query('123')
+
+// const rootDoc = ref(new Loro<{ docs: LoroMap<Record<string, Loro>> }>())
+// const doc1 = ref(new Loro<{ docs: LoroMap<Record<string, DocType>> }>())
+const doc = ref<Loro<Record<string, LoroMap<Record<string, DocType>>>>>(new Loro())
+
+const doc1 = new Loro()
+// const folder = rootDoc.value.getMap('docs')
+// folder.set('docs', doc.value)
+const res = stringToUint8Array(await $trpc.docs.getItem.query('123'))
+console.log(res)
+doc1.import(res)
+doc.value.import(res)
+console.log(doc1)
+
 // wrap.doc = A.load<DocType>(stringToUint8Array(resDoc))
 
 $trpc.docs.onChange.subscribe(undefined, {
-  onData(value) {
+  onData(value, snapshot) {
     // const decoded = A.decodeChange(value.lastChange)
     // console.log(decoded)
     // console.log(A.getAllChanges(wrap.doc))
-    console.log(value)
-    doc.value = value.arg0.currentTarget
+    doc.value.import(stringToUint8Array(snapshot))
+    console.log(snapshot)
+    // doc.value.import(stringToUint8Array(value.))
+    // doc.value = value.arg0.currentTarget
     // doc.value = applyDiffs(clone(doc.value), value.diffs)
     // const heads = A.getHeads(wrap.doc)
     // const before = A.getHeads(wrap.doc)

@@ -6,9 +6,6 @@ import { z } from 'zod'
 
 import { publicProcedure, rootRouter } from '../trpc'
 
-import type { DocType } from '@sozdev/share-libs'
-import type * as Y from 'yjs'
-
 // const logger = consola.withTag('server')
 
 export const docsRouter = rootRouter({
@@ -45,13 +42,13 @@ export const docsRouter = rootRouter({
     }),
 
   onChange: publicProcedure
-    .subscription(async () => observable<{ arg0: Y.YMapEvent<DocType>, arg1: Y.Transaction }>((emit) => {
-      a.onChange((arg0, arg1) => {
+    .subscription(async () => observable<a.LoroEventBatch, any>((emit) => {
+      a.onChange((event, snapshot) => {
         // const doc = A.init()
         // const changes = A.applyChanges(doc, [change.lastChange])[0]
         // logger.info('onChange', changes)
         // logger.success('onChange', change)
-        emit.next({ arg0, arg1 })
+        emit.next(event, snapshot)
       })
     })),
 })

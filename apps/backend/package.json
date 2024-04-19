@@ -93,6 +93,7 @@
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-wasm": "^6.2.2",
     "@sozdev/eslint-config": "^0.0.11",
     "@types/ws": "^8.5.10",
     "concurrently": "^8.2.2",

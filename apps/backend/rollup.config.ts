@@ -5,11 +5,10 @@ import * as process from 'node:process'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
+import { wasm } from '@rollup/plugin-wasm'
 import { defineConfig } from 'rollup'
 import dts from 'rollup-plugin-dts'
 import esbuild from 'rollup-plugin-esbuild'
-
-
 
 const cwdDir = path.resolve(process.cwd(), '.')
 
@@ -39,6 +38,7 @@ export default defineConfig([
       resolve({
         preferBuiltins: true,
       }),
+      wasm(),
       commonjs(),
       esbuild({
         minify: true,
