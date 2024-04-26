@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import process from 'node:process'
 
-import { WebSocketProxy, transformer } from '@sozdev/share-libs'
+import { WebSocketProxy, stringToUint8Array, transformer } from '@sozdev/share-libs'
 import {
   createTRPCProxyClient,
   createWSClient,
@@ -9,6 +9,7 @@ import {
 } from '@trpc/client'
 import consola from 'consola'
 import { createLocalJWKSet } from 'jose'
+import { decodeImportBlobMeta } from 'loro-crdt'
 
 import type { AppRouter } from '~/server/router'
 
@@ -48,7 +49,7 @@ const client = createTRPCProxyClient<AppRouter>({
 // const resDoc = await client.docs.getItem.query('123')
 // const doc = A.load<DocType>(stringToUint8Array(resDoc))
 // doc = A.merge(doc, docQ)
-
+const array = Array.from(({ length: 1000 })).map(() => ({ text: { text: `idea ${Math.floor(Math.random() * 1000)}`, 8: Math.floor(Math.random() * 1000) } }))
 setInterval(() => {
   const random = Math.floor(Math.random() * 1000)
   // console.log('random', random)
@@ -57,17 +58,20 @@ setInterval(() => {
   //   doc.name = `hello world 1 - ${random}`
   // })
   // console.log('docSetTimeout', doc)
-  const ideas = Array.from(({ length: 10 })).map(() => ({ text: { text: `idea ${Math.floor(Math.random() * 1000)}`, 8: Math.floor(Math.random() * 1000) } }))
+  array[Math.random() * array.length | 0] = { text: { text: `idea ${Math.floor(Math.random() * 1000)}`, 8: Math.floor(Math.random() * 1000) } }
+  const ideas = array
   client.docs.putItem.mutate({ id: '123', doc: { name: `hello world 1 - ${random}`, ideas } })
-}, 5000)
+}, 3000)
 
 // logger.info('Users:', users.length)
-const subscription = client.docs.onChange.subscribe(undefined, {
+const _subscription = client.docs.onChange.subscribe(undefined, {
   onStarted() {
     logger.info('Subscription started')
   },
   onData(value) {
-    logger.info('Subscription data', value)
+    const blob = decodeImportBlobMeta(stringToUint8Array(value.partitial))
+
+    logger.info('Subscription data: blob', blob)
     // const change = A.applyChanges(doc, [value.lastChange])
     // doc = change[0]
     // logger.success('Subscription data', change[0])

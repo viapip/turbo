@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { stringToUint8Array } from '@sozdev/share-libs/src/browser'
-import { Loro } from 'loro-crdt'
+// import { stringToUint8Array } from '@sozdev/share-libs/src/browser'
+import { stringToUint8Array } from '@sozdev/share-libs/dist/browser'
+import { Loro, decodeImportBlobMeta } from 'loro-crdt'
 import { set } from 'radash'
 
 import type { DocType } from '@sozdev/share-libs/src/browser'
@@ -18,25 +19,55 @@ const items = ref([
 // const rootDoc = ref(new Loro<{ docs: LoroMap<Record<string, Loro>> }>())
 // const doc1 = ref(new Loro<{ docs: LoroMap<Record<string, DocType>> }>())
 const doc = ref<Loro<Record<string, LoroMap<Record<string, DocType>>>>>(new Loro())
-
 const doc1 = new Loro()
 // const folder = rootDoc.value.getMap('docs')
 // folder.set('docs', doc.value)
-const res = stringToUint8Array(await $trpc.docs.getItem.query('123'))
-console.log(res)
-doc1.import(res)
-doc.value.import(res)
-console.log(doc1)
-
+// const res = stringToUint8Array(await $trpc.docs.getItem.query('123'))
+// // console.log(res)
+// doc1.import(res)
+// doc.value.import(res)
+// console.log(doc1.toJson())
+const docsRef = ref(doc1.getMap('docs'))
+const nameRef = ref('')
+const obj = ref<DocType | null>(null)
+// map.subscribe(doc.value, (events) => {
+//   console.log('events', events)
+// })
 // wrap.doc = A.load<DocType>(stringToUint8Array(resDoc))
 
+// const computedDoc = computed(() => {
+//   console.log('doc', doc.value.getMap('docs').toJson())
+//   return doc.value.getMap('docs').toJson()
+// })
+doc.value.setPeerId('2')
 $trpc.docs.onChange.subscribe(undefined, {
-  onData(value, snapshot) {
+  onData({ event, partitial }) {
     // const decoded = A.decodeChange(value.lastChange)
     // console.log(decoded)
     // console.log(A.getAllChanges(wrap.doc))
-    doc.value.import(stringToUint8Array(snapshot))
-    console.log(snapshot)
+    const blob = decodeImportBlobMeta(stringToUint8Array(partitial))
+
+    console.log('onData', event)
+    console.log('onData blob', blob)
+
+    // doc.value.
+    doc.value.checkout(doc.value.vvToFrontiers(blob.partialStartVersionVector))
+    // doc.value.import(stringToUint8Array(partitial))
+    // doc.value.attach()
+    // console.log('peerId', doc.value.peerId)
+
+    console.log('doc', doc.value.toJson())
+    docsRef.value = doc.value.getMap('docs')
+    obj.value = docsRef.value.get('123') as DocType
+    nameRef.value = obj.value.name
+    // console.log(docsRef.value.toJson())
+
+    // doc1.import(stringToUint8Array(snapshot))
+
+    // docsRef.value = doc1.getMap('docs')
+    // obj.value = map.toJson() as DocType
+    // computedDoc.effect.run()
+    // console.log(doc.value.toJson())
     // doc.value.import(stringToUint8Array(value.))
     // doc.value = value.arg0.currentTarget
     // doc.value = applyDiffs(clone(doc.value), value.diffs)
@@ -93,8 +124,9 @@ function applyDiffs(doc: DocType, diffs: Difference[]) {
   <div>
     <div> merge component</div>
     <div> keys:{{ keys }}</div>
-    <div>doc: {{ doc }}</div>
-    <UInput v-model="doc.name" />
+    <div>doc name: {{ nameRef }}</div>
+    <div>doc: {{ docsRef.toJson() }}</div>
+    <!-- <UInput v-model="computedDoc.name" /> -->
     <UAccordion :items="items">
       <template #default>
         <UButton> изменения</UButton>

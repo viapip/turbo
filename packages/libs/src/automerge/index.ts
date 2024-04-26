@@ -1,7 +1,8 @@
+// import * as A from '@automerge/automerge'
 import consola from 'consola'
-import { Loro } from 'loro-crdt'
+import { Loro, setDebug } from 'loro-crdt'
 
-import { uint8ArrayToString } from '../transformer'
+import { stringToUint8Array, uint8ArrayToString } from '../transformer'
 
 import type { ContainerID, LoroEvent, LoroMap } from 'loro-crdt'
 
@@ -9,12 +10,17 @@ export interface DocType {
   name: string
   ideas: Array<string>
 }
+// const test = A.init<DocType>()
+
 const logger = consola.withTag('automerge')
-const rootDoc = new Loro<{ docs: LoroMap<Record<string, Loro>> }>()
+setDebug()
+// const rootDoc = new Loro<{ docs: LoroMap<Record<string, Loro>> }>()
 export const doc1 = new Loro<{ docs: LoroMap<Record<string, DocType>> }>()
-const folder = rootDoc.getMap('docs')
-folder.set('docs', doc1)
+
+// const folder = rootDoc.getMap('docs')
+// folder.set('docs', doc1)
 export const docMap = doc1.getMap('docs')
+doc1.setPeerId('1')
 // export const docArray = doc1.getList('docs')
 
 let n = 0
@@ -23,7 +29,6 @@ export function next() {
 
   return n
 }
-
 export function getDoc(id: string) {
   const obj = docMap.get(id)
   if (!obj)
@@ -37,11 +42,13 @@ export function getDoc(id: string) {
   // if (index === -1)
   //   docArray.insert(docArray.length, [{ id, ideas: [], name: '' }])
 
-  const data = doc1.exportSnapshot()
+  const data = doc1.exportFrom()
 
   return uint8ArrayToString(data)
 }
-
+export function importDoc(data: string) {
+  doc1.import(stringToUint8Array(data))
+}
 export function change(
   id: string,
   d: DocType,
@@ -84,16 +91,21 @@ export interface LoroEventBatch {
   events: LoroEvent[]
 }
 export interface Listener {
-  (event: LoroEventBatch, snapshot: string): void
+  (event: LoroEventBatch, partitial: string): void
 }
 export function onChange(
   listener: Listener,
 ) {
-  logger.log('onChange')
   // docMap.subscribe(doc1, listener)
+  let lastVV = doc1.version()
   doc1.subscribe((event) => {
-    const snapshot = doc1.exportSnapshot()
-    listener(event, uint8ArrayToString(snapshot))
+    // %DebugTrackRetainingPath(doc1)
+    const newVV = doc1.version()
+    logger.log('lastVV', lastVV)
+    logger.log('newVV', newVV)
+    doc1.debugHistory()
+    listener(event, uint8ArrayToString(doc1.exportFrom(lastVV)))
+    lastVV = newVV
   })
   // docArray.observe((yarrayEvent) => {
   //   logger.log('yarrayEvent.changes.keys', JSON.stringify(yarrayEvent.changes))

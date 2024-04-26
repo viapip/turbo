@@ -1,12 +1,11 @@
 import { a } from '@sozdev/share-libs'
 import { observable } from '@trpc/server/observable'
+import consola from 'consola'
 import { z } from 'zod'
-
-// import consola from 'consola'
 
 import { publicProcedure, rootRouter } from '../trpc'
 
-// const logger = consola.withTag('server')
+const logger = consola.withTag('server')
 
 export const docsRouter = rootRouter({
   getKeys: publicProcedure
@@ -32,6 +31,22 @@ export const docsRouter = rootRouter({
       // console.log('microdiff', diff(prev, doc))
       return a.getDoc(id)
     }),
+  putItem2: publicProcedure
+    .input(z.object({
+      id: z.string(),
+      doc: z.object({
+        name: z.string(),
+        ideas: z.array(z.any()),
+      }),
+    }))
+    .mutation(async ({ input: { id, doc } }) => {
+      // const prev = a.docs.get(id)!
+
+      a.change(id, doc)
+
+      // console.log('microdiff', diff(prev, doc))
+      return a.getDoc(id)
+    }),
 
   deleteItem: publicProcedure
     .input(z.string())
@@ -42,13 +57,14 @@ export const docsRouter = rootRouter({
     }),
 
   onChange: publicProcedure
-    .subscription(async () => observable<a.LoroEventBatch, any>((emit) => {
-      a.onChange((event, snapshot) => {
+    .subscription(async () => observable<{ event: a.LoroEventBatch, partitial: string }>((emit) => {
+      a.onChange((event, partitial) => {
+        logger.info('onChange', event)
         // const doc = A.init()
         // const changes = A.applyChanges(doc, [change.lastChange])[0]
         // logger.info('onChange', changes)
         // logger.success('onChange', change)
-        emit.next(event, snapshot)
+        emit.next({ event, partitial })
       })
     })),
 })
