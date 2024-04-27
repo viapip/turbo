@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import process from 'node:process'
 
-import { WebSocketProxy, stringToUint8Array, transformer } from '@sozdev/share-libs'
+import { WebSocketProxy, transformer } from '@sozdev/share-libs'
 import {
   createTRPCProxyClient,
   createWSClient,
@@ -9,7 +9,6 @@ import {
 } from '@trpc/client'
 import consola from 'consola'
 import { createLocalJWKSet } from 'jose'
-import { decodeImportBlobMeta } from 'loro-crdt'
 
 import type { AppRouter } from '~/server/router'
 
@@ -49,7 +48,7 @@ const client = createTRPCProxyClient<AppRouter>({
 // const resDoc = await client.docs.getItem.query('123')
 // const doc = A.load<DocType>(stringToUint8Array(resDoc))
 // doc = A.merge(doc, docQ)
-const array = Array.from(({ length: 1000 })).map(() => ({ text: { text: `idea ${Math.floor(Math.random() * 1000)}`, 8: Math.floor(Math.random() * 1000) } }))
+const array = Array.from(({ length: 10000 })).map(() => ({ text: { text: `idea ${Math.floor(Math.random() * 1000)}`, 8: Math.floor(Math.random() * 1000) } }))
 setInterval(() => {
   const random = Math.floor(Math.random() * 1000)
   // console.log('random', random)
@@ -68,10 +67,11 @@ const _subscription = client.docs.onChange.subscribe(undefined, {
   onStarted() {
     logger.info('Subscription started')
   },
-  onData(value) {
-    const blob = decodeImportBlobMeta(stringToUint8Array(value.partitial))
+  onData({ id, lastChange }) {
+    // const blob = decodeImportBlobMeta(stringToUint8Array(value.partitial))
 
-    logger.info('Subscription data: blob', blob)
+    logger.info('Subscription data: id', id)
+    logger.info('Subscription data: length', lastChange.length)
     // const change = A.applyChanges(doc, [value.lastChange])
     // doc = change[0]
     // logger.success('Subscription data', change[0])

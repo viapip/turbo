@@ -1,10 +1,10 @@
 // import * as A from '@automerge/automerge'
+import { EventEmitter } from 'node:events'
+
+import { next as A } from '@automerge/automerge'
 import consola from 'consola'
-import { Loro, setDebug } from 'loro-crdt'
 
-import { stringToUint8Array, uint8ArrayToString } from '../transformer'
-
-import type { ContainerID, LoroEvent, LoroMap } from 'loro-crdt'
+import type { ContainerID, LoroEvent } from 'loro-crdt'
 
 export interface DocType {
   name: string
@@ -13,14 +13,15 @@ export interface DocType {
 // const test = A.init<DocType>()
 
 const logger = consola.withTag('automerge')
-setDebug()
 // const rootDoc = new Loro<{ docs: LoroMap<Record<string, Loro>> }>()
-export const doc1 = new Loro<{ docs: LoroMap<Record<string, DocType>> }>()
+export const docs: Map<string, A.Doc<DocType>> = new Map()
 
+const emitter = new EventEmitter()
+const doc = A.init<DocType>()
 // const folder = rootDoc.getMap('docs')
 // folder.set('docs', doc1)
-export const docMap = doc1.getMap('docs')
-doc1.setPeerId('1')
+// export const docMap = doc1.getMap('docs')
+// doc1.setPeerId('1')
 // export const docArray = doc1.getList('docs')
 
 let n = 0
@@ -30,9 +31,9 @@ export function next() {
   return n
 }
 export function getDoc(id: string) {
-  const obj = docMap.get(id)
+  const obj = docs.get(id)
   if (!obj)
-    docMap.set(id, { name: '', ideas: [] })
+    docs.set(id, A.init())
 
   // let index = -1
   // docArray.forEach((doc, i) => {
@@ -42,20 +43,29 @@ export function getDoc(id: string) {
   // if (index === -1)
   //   docArray.insert(docArray.length, [{ id, ideas: [], name: '' }])
 
-  const data = doc1.exportFrom()
+  const data = A.save(doc)
 
-  return uint8ArrayToString(data)
-}
-export function importDoc(data: string) {
-  doc1.import(stringToUint8Array(data))
+  return data
 }
 export function change(
   id: string,
-  d: DocType,
+  changeFn: (d: DocType) => void,
   // changeFn: (d: DocType) => void,
 ) {
-  logger.log('merge change')
-  docMap.set(id, d)
+  if (!docs.has(id))
+    docs.set(id, A.init<DocType>())
+
+  let doc = docs.get(id)!
+  logger.log('doc', doc)
+
+  doc = A.change(A.clone(doc), {
+    message: `Change ${next()}`,
+    time: new Date().getTime(),
+  }, changeFn)
+  const lastChange = A.getLastLocalChange(doc)
+
+  emitter.emit('change', { id, lastChange })
+  docs.set(id, doc)
   // let index = -1
   // docArray.forEach((doc, i) => {
   //   if (doc.id === id)
@@ -71,7 +81,7 @@ export function change(
   //   docArray.insert(docArray.length, [{ id, ...d }])
   // }
 
-  return d
+  return doc
 }
 export interface LoroEventBatch {
   /**
@@ -90,23 +100,28 @@ export interface LoroEventBatch {
   currentTarget?: ContainerID
   events: LoroEvent[]
 }
+// export interface Listener {
+//   (event: LoroEventBatch, partitial: string): void
+// }
 export interface Listener {
-  (event: LoroEventBatch, partitial: string): void
+  (data: { lastChange: A.Change, id: string }): void
 }
 export function onChange(
   listener: Listener,
 ) {
+  logger.log('onChange')
+  emitter.on('change', listener)
   // docMap.subscribe(doc1, listener)
-  let lastVV = doc1.version()
-  doc1.subscribe((event) => {
-    // %DebugTrackRetainingPath(doc1)
-    const newVV = doc1.version()
-    logger.log('lastVV', lastVV)
-    logger.log('newVV', newVV)
-    doc1.debugHistory()
-    listener(event, uint8ArrayToString(doc1.exportFrom(lastVV)))
-    lastVV = newVV
-  })
+  // let lastVV = doc1.version()
+  // doc1.subscribe((event) => {
+  //   // %DebugTrackRetainingPath(doc1)
+  //   const newVV = doc1.version()
+  //   logger.log('lastVV', lastVV)
+  //   logger.log('newVV', newVV)
+  //   doc1.debugHistory()
+  //   listener(event, uint8ArrayToString(doc1.exportFrom(lastVV)))
+  //   lastVV = newVV
+  // })
   // docArray.observe((yarrayEvent) => {
   //   logger.log('yarrayEvent.changes.keys', JSON.stringify(yarrayEvent.changes))
   //   yarrayEvent.changes.keys.forEach((change, key) => {

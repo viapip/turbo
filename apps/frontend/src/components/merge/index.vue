@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // import { stringToUint8Array } from '@sozdev/share-libs/src/browser'
-import { stringToUint8Array } from '@sozdev/share-libs/dist/browser'
-import { Loro, decodeImportBlobMeta } from 'loro-crdt'
+import { next as A } from '@automerge/automerge'
+import { Loro } from 'loro-crdt'
 import { set } from 'radash'
 
 import type { DocType } from '@sozdev/share-libs/src/browser'
@@ -19,7 +19,10 @@ const items = ref([
 // const rootDoc = ref(new Loro<{ docs: LoroMap<Record<string, Loro>> }>())
 // const doc1 = ref(new Loro<{ docs: LoroMap<Record<string, DocType>> }>())
 const doc = ref<Loro<Record<string, LoroMap<Record<string, DocType>>>>>(new Loro())
-const doc1 = new Loro()
+let doc1 = A.init<DocType>()
+// const res = await $trpc.docs.getItem.query('123')
+// doc1 = A.load<DocType>(res)
+// const doc1 = new Loro()
 // const folder = rootDoc.value.getMap('docs')
 // folder.set('docs', doc.value)
 // const res = stringToUint8Array(await $trpc.docs.getItem.query('123'))
@@ -27,7 +30,7 @@ const doc1 = new Loro()
 // doc1.import(res)
 // doc.value.import(res)
 // console.log(doc1.toJson())
-const docsRef = ref(doc1.getMap('docs'))
+// const docsRef = ref(doc1.getMap('docs'))
 const nameRef = ref('')
 const obj = ref<DocType | null>(null)
 // map.subscribe(doc.value, (events) => {
@@ -41,25 +44,28 @@ const obj = ref<DocType | null>(null)
 // })
 doc.value.setPeerId('2')
 $trpc.docs.onChange.subscribe(undefined, {
-  onData({ event, partitial }) {
-    // const decoded = A.decodeChange(value.lastChange)
-    // console.log(decoded)
+  onData(data) {
+    console.log('lasChange', data)
+    const decoded = A.decodeChange(data.lastChange)
+    console.log('decoded', decoded)
+    doc1 = A.applyChanges(doc1, [data.lastChange])[0]
+    console.log('doc1', doc1)
     // console.log(A.getAllChanges(wrap.doc))
-    const blob = decodeImportBlobMeta(stringToUint8Array(partitial))
+    // const blob = decodeImportBlobMeta(stringToUint8Array(partitial))
 
-    console.log('onData', event)
-    console.log('onData blob', blob)
+    // console.log('onData', event)
+    // console.log('onData blob', blob)
 
     // doc.value.
-    doc.value.checkout(doc.value.vvToFrontiers(blob.partialStartVersionVector))
+    // doc.value.checkout(doc.value.vvToFrontiers(blob.partialStartVersionVector))
     // doc.value.import(stringToUint8Array(partitial))
     // doc.value.attach()
     // console.log('peerId', doc.value.peerId)
 
-    console.log('doc', doc.value.toJson())
-    docsRef.value = doc.value.getMap('docs')
-    obj.value = docsRef.value.get('123') as DocType
-    nameRef.value = obj.value.name
+    // console.log('doc', doc.value.toJson())
+    // docsRef.value = doc.value.getMap('docs')
+    // obj.value = docsRef.value.get('123') as DocType
+    // nameRef.value = obj.value.name
     // console.log(docsRef.value.toJson())
 
     // doc1.import(stringToUint8Array(snapshot))
@@ -125,7 +131,6 @@ function applyDiffs(doc: DocType, diffs: Difference[]) {
     <div> merge component</div>
     <div> keys:{{ keys }}</div>
     <div>doc name: {{ nameRef }}</div>
-    <div>doc: {{ docsRef.toJson() }}</div>
     <!-- <UInput v-model="computedDoc.name" /> -->
     <UAccordion :items="items">
       <template #default>

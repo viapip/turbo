@@ -1,14 +1,21 @@
 /* eslint-disable */
-export type GeoJSONFeature = {
-    bbox?:      number[];
-    geometry:   null | GeoJSONFeatureGeoJSONPoint;
-    id?:        number | string;
-    properties: { [key: string]: any } | null;
-    type:       GeoJSONFeatureType;
+export type GeoJSONFeatureCollection = {
+    bbox?:    number[];
+    features: FeatureElement[];
+    type:     GeoJSONFeatureCollectionType;
     [property: string]: any;
 }
 
-export type GeoJSONFeatureGeoJSONPoint = {
+export type FeatureElement = {
+    bbox?:      number[];
+    geometry:   null | FeatureGeoJSONPoint;
+    id?:        number | string;
+    properties: { [key: string]: any } | null;
+    type:       FeatureType;
+    [property: string]: any;
+}
+
+export type FeatureGeoJSONPoint = {
     bbox?:        number[];
     coordinates?: Array<Array<Array<number[] | number> | number> | number>;
     type:         PurpleType;
@@ -27,7 +34,9 @@ export type GeometryType = "Point" | "LineString" | "Polygon" | "MultiPoint" | "
 
 export type PurpleType = "Point" | "LineString" | "Polygon" | "MultiPoint" | "MultiLineString" | "MultiPolygon" | "GeometryCollection";
 
-export type GeoJSONFeatureType = "Feature";
+export type FeatureType = "Feature";
+
+export type GeoJSONFeatureCollectionType = "FeatureCollection";
 
 export type GeoJSONGeometry = {
     bbox?:       number[];
@@ -36,23 +45,25 @@ export type GeoJSONGeometry = {
     [property: string]: any;
 }
 
-export type GeoJSONFeatureCollection = {
-    bbox?:    number[];
-    features: FeatureElement[];
-    type:     GeoJSONFeatureCollectionType;
+export type GeoJSONLineString = {
+    bbox?:       number[];
+    coordinates: Array<number[]>;
+    type:        FluffyType;
     [property: string]: any;
 }
 
-export type FeatureElement = {
+export type FluffyType = "LineString";
+
+export type GeoJSONFeature = {
     bbox?:      number[];
-    geometry:   null | FeatureGeoJSONPoint;
+    geometry:   null | GeoJSONFeatureGeoJSONPoint;
     id?:        number | string;
     properties: { [key: string]: any } | null;
-    type:       GeoJSONFeatureType;
+    type:       FeatureType;
     [property: string]: any;
 }
 
-export type FeatureGeoJSONPoint = {
+export type GeoJSONFeatureGeoJSONPoint = {
     bbox?:        number[];
     coordinates?: Array<Array<Array<number[] | number> | number> | number>;
     type:         PurpleType;
@@ -67,12 +78,19 @@ export type FluffyGeoJSON = {
     [property: string]: any;
 }
 
-export type GeoJSONFeatureCollectionType = "FeatureCollection";
+export type GeoJSONMultiLineString = {
+    bbox?:       number[];
+    coordinates: Array<Array<number[]>>;
+    type:        TentacledType;
+    [property: string]: any;
+}
+
+export type TentacledType = "MultiLineString";
 
 export type GeoJSONGeometryCollection = {
     bbox?:      number[];
     geometries: TentacledGeoJSON[];
-    type:       FluffyType;
+    type:       StickyType;
     [property: string]: any;
 }
 
@@ -83,25 +101,7 @@ export type TentacledGeoJSON = {
     [property: string]: any;
 }
 
-export type FluffyType = "GeometryCollection";
-
-export type GeoJSONMultiLineString = {
-    bbox?:       number[];
-    coordinates: Array<Array<number[]>>;
-    type:        TentacledType;
-    [property: string]: any;
-}
-
-export type TentacledType = "MultiLineString";
-
-export type GeoJSONLineString = {
-    bbox?:       number[];
-    coordinates: Array<number[]>;
-    type:        StickyType;
-    [property: string]: any;
-}
-
-export type StickyType = "LineString";
+export type StickyType = "GeometryCollection";
 
 export type GeoJSONMultiPoint = {
     bbox?:       number[];
@@ -121,23 +121,30 @@ export type GeoJSONMultiPolygon = {
 
 export type IndecentType = "MultiPolygon";
 
-export type GeoJSONPolygon = {
+export type GeoJSONPoint = {
     bbox?:       number[];
-    coordinates: Array<Array<number[]>>;
+    coordinates: number[];
     type:        HilariousType;
     [property: string]: any;
 }
 
-export type HilariousType = "Polygon";
+export type HilariousType = "Point";
 
-export type GeoJSONPoint = {
+export type GeoJSONPolygon = {
     bbox?:       number[];
-    coordinates: number[];
+    coordinates: Array<Array<number[]>>;
     type:        AmbitiousType;
     [property: string]: any;
 }
 
-export type AmbitiousType = "Point";
+export type AmbitiousType = "Polygon";
+
+export type TestUserInfo = {
+    date?: Date;
+    email: string;
+    name:  string;
+    [property: string]: any;
+}
 
 export type TileJSON = {
     attribution?:  string;
@@ -166,12 +173,5 @@ export type VectorLayer = {
     id:           string;
     maxzoom?:     number;
     minzoom?:     number;
-    [property: string]: any;
-}
-
-export type TestUserInfo = {
-    date?: Date;
-    email: string;
-    name:  string;
     [property: string]: any;
 }
