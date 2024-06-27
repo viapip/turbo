@@ -69,3 +69,4 @@ core
 *.log*
 
 fonts/
+./.idea
