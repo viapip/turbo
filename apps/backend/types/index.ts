@@ -121,23 +121,30 @@ export type GeoJSONMultiPolygon = {
 
 export type IndecentType = "MultiPolygon";
 
-export type GeoJSONPolygon = {
+export type GeoJSONPoint = {
     bbox?:       number[];
-    coordinates: Array<Array<number[]>>;
+    coordinates: number[];
     type:        HilariousType;
     [property: string]: any;
 }
 
-export type HilariousType = "Polygon";
+export type HilariousType = "Point";
 
-export type GeoJSONPoint = {
+export type GeoJSONPolygon = {
     bbox?:       number[];
-    coordinates: number[];
+    coordinates: Array<Array<number[]>>;
     type:        AmbitiousType;
     [property: string]: any;
 }
 
-export type AmbitiousType = "Point";
+export type AmbitiousType = "Polygon";
+
+export type TestUserInfo = {
+    date?: Date;
+    email: string;
+    name:  string;
+    [property: string]: any;
+}
 
 export type TileJSON = {
     attribution?:  string;
@@ -166,12 +173,5 @@ export type VectorLayer = {
     id:           string;
     maxzoom?:     number;
     minzoom?:     number;
-    [property: string]: any;
-}
-
-export type TestUserInfo = {
-    date?: Date;
-    email: string;
-    name:  string;
     [property: string]: any;
 }

@@ -1,11 +1,11 @@
 {
-  "name": "with-vue-nuxt",
+  "name": "turbo",
   "type": "module",
   "private": true,
   "packageManager": "yarn@4.1.1",
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo watch dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint:staged": "lint-staged"
@@ -16,7 +16,7 @@
     "lint-staged": "^15.2.0",
     "prettier": "^3.2.5",
     "tsconfig": "*",
-    "turbo": "latest",
+    "turbo": "^2.0.5",
     "typescript": "^5.4.2"
   },
   "workspaces": [
