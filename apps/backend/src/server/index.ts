@@ -4,6 +4,8 @@ import { applyWSSHandler } from '@trpc/server/adapters/ws'
 import consola from 'consola'
 import { createLocalJWKSet } from 'jose'
 
+import config from '../config'
+
 import { createContext } from './context'
 import { router } from './router'
 
@@ -11,9 +13,11 @@ import type { AppRouter } from './router'
 import type { IJoseVerify, KeyPair } from '@sozdev/share-libs'
 
 const logger = consola.withTag('server')
-
 export * from './router'
 
+
+logger.log('test')
+logger.log('config', config)
 export async function bootstrap() {
   const app = createHTTPServer({
     router,

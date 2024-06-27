@@ -42,7 +42,7 @@
     "release": "yarn npm publish",
     "clean": "yarn exec rm -rf dist",
     "lint": "yarn eslint --config eslint.config.js",
-    "server": "yarn tsx --watch --trace_gc src/server",
+    "server": "yarn tsx --watch src/server",
     "dev:server": "yarn server",
     "dev:workers": "yarn workers",
     "dev": "concurrently 'yarn:dev:*' ",
